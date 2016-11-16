@@ -4,7 +4,8 @@
   "description": "Toy implemtation of some of rxjs 5 made for personal learning purposes",
   "scripts": {
     "test": "jasmine test/*spec.js",
-    "compile": "tsc"
+    "compile": "tsc",
+    "lint": "tslint src/*.ts test/*.ts"
   },
   "author": "",
   "license": "MIT",
