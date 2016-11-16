@@ -1,0 +1,19 @@
+{
+  "name": "toy-rxjs",
+  "version": "1.0.0",
+  "description": "Toy implemtation of some of rxjs 5 made for personal learning purposes",
+  "scripts": {
+    "test": "jasmine test/*spec.js",
+    "compile": "tsc"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@types/chai": "^3.4.34",
+    "@types/jasmine": "^2.5.38",
+    "jasmine": "^2.5.2",
+    "rxjs": "^5.0.0-rc.3",
+    "tslint": "next",
+    "typescript": "next"
+  }
+}

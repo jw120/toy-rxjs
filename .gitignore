@@ -1,0 +1,10 @@
+/node_modules
+/.vscode
+npm-debug.log
+yarn.lock
+.DS_Store
+/old
+src/*.js
+src/*.js.map
+test/*.js
+test/*.js.map
