@@ -23,6 +23,17 @@ const repeat = (ticks: number, ms: number) => (observer: Rx.Observer<string>): v
   }, ms);
 };
 
+const forever = (ms: number) => (observer: Rx.Observer<string>): (() => void) => {
+  let count: number = 0;
+  observer.next('start');
+  const id: any = setInterval((): void => {
+      observer.next(`tick ${count}`);
+  }, ms);
+  return (): void => {
+    clearInterval(id);
+  };
+};
+
 // gives the time elapsed in ms rounded to the nearest 10ms
 function elapsed(start: Date): number {
   const now: Date = new Date();
@@ -61,7 +72,7 @@ describe('Observables from an async setTimeout', () => {
 
 });
 
-describe('Observables from an async setInterval', () => {
+describe('Observables from a finite async setInterval', () => {
   let tlog: string[] = [];
   let rlog: string[] = [];
 
@@ -77,6 +88,29 @@ describe('Observables from an async setInterval', () => {
 
   it('should work', () => {
     expect(tlog.length).toBe(7);
+    expect(tlog).toEqual(rlog);
+  });
+
+});
+
+describe('Observables from an infinite async setInterval using unsubscribe', () => {
+  let tlog: string[] = [];
+  let rlog: string[] = [];
+
+  beforeEach((done: DoneFn) => {
+    let s: ToyRx.Subscription = (new ToyRx.Observable<string>(forever(100)))
+      .subscribe(createAsyncLoggingObserver(tlog, '', done));
+    setTimeout(() => { s.unsubscribe(); done(); } , 450);
+  });
+
+  beforeEach((done: DoneFn) => {
+    let s: Rx.Subscription = (new Rx.Observable<string>(forever(100)))
+      .subscribe(createAsyncLoggingObserver(rlog, '', done));
+    setTimeout(() => { s.unsubscribe(); done(); } , 450);
+  });
+
+  it('should work', () => {
+    expect(tlog.length).toBe(5);
     expect(tlog).toEqual(rlog);
   });
 

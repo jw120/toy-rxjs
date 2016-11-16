@@ -14,11 +14,14 @@ export interface Subscription {
   unsubscribe: () => void;
 }
 
+type UnSubFn = () => void;
+type CreateFn<T> = (o: Observer<T>) => (UnSubFn | void);
+
 export class Observable<T> {
 
   private finished: boolean;
 
-  constructor(private createFn: (o: Observer<T>) => void) {
+  constructor(private createFn: CreateFn<T>) {
     this.finished = true;
   }
 
@@ -36,14 +39,14 @@ export class Observable<T> {
     } else {
       rawObserver = a;
     }
-    this.createFn({
+    const unsub: UnSubFn | void = this.createFn({
       next: (x: T): void => { if (!this.finished) { rawObserver.next(x); } },
       error: (e: Error): void => { if (!this.finished) { this.finished = true; rawObserver.error(e); } },
       complete: (): void => { if (!this.finished) { this.finished = true; rawObserver.complete(); } }
     });
 
     return {
-      unsubscribe: (): void => { /* empty */ }
+      unsubscribe: unsub || null
     };
 
   }
