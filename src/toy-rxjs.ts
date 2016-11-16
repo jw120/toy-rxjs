@@ -76,26 +76,23 @@ export class Observable<T> {
    *
    */
 
-  // take(n: number): Observable<T> {
-  //   return new Observable<T>((observer: Observer<T>) => {
-
   map<U>(f: (x: T) => U): Observable<U> {
-    return new Observable((o: Observer<U>) => {
-      const oPatched: Observer<T> = {
-        next: (x: T) => o.next(f(x)),
-        error: o.error,
-        complete: o.complete
-      };
-      return this.createFn(oPatched);
-    });
+    return new Observable((o: Observer<U>) => this.createFn({
+      next: (x: T) => o.next(f(x)),
+      error: o.error,
+      complete: o.complete
+    }));
   }
 
-  // identity(): Observable<T> {
-  //   return new Observable((o: Observer<T>) => {
-  //     return this.createFn(o);
-  //   };
-  // }
-
-
+  take(n: number): Observable<T> {
+    return new Observable<T>((o: Observer<T>) => {
+      let count: number = 0;
+      return this.createFn({
+        next: (x: T) => count++ < n ? o.next(x) : o.complete(),
+        error: o.error,
+        complete: o.complete
+      });
+    });
+  }
 
 }
