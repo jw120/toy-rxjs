@@ -1,5 +1,13 @@
 TODO
 
-* Test unsubscribe
+* Rethink time stamps in async logging
 
-* Shoudl unsubsscribe trigger complete/error? Seems not
+* interval
+* map
+* flatMap/concatMap
+* switchMap
+* combineLatest?
+subscription.add
+
+Later
+* Subject

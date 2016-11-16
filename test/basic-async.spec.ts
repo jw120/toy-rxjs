@@ -1,6 +1,8 @@
 import * as Rx from 'rxjs/Rx';
 import * as ToyRx from '../src/toy-rxjs';
 
+import { createAsyncLoggingObserver } from './logging-helper';
+
 const delay = (ms: number) => (observer: Rx.Observer<string>): void => {
   observer.next('Start');
   setTimeout((): void => {
@@ -33,23 +35,6 @@ const forever = (ms: number) => (observer: Rx.Observer<string>): (() => void) =>
     clearInterval(id);
   };
 };
-
-// gives the time elapsed in ms rounded to the nearest 10ms
-function elapsed(start: Date): number {
-  const now: Date = new Date();
-  const diff: number = now.getTime() - start.getTime();
-  return Math.round(diff / 50) * 50;
-}
-
-function createAsyncLoggingObserver<T>(log: string[], label: string, done: DoneFn): Rx.Observer<T> {
-  const start: Date = new Date();
-  label = label ? label + ' ' : ''; // pad with a space if we have a label
-  return {
-    next: (x: T): void => { log.push(`${label}${elapsed(start)} next ${x}`); },
-    error: (e: Error): void => { log.push(`${label}${elapsed(start)}error ${e.message}`); done(); },
-    complete: (): void => { log.push(`${label}${elapsed(start)} complete`); done(); }
-  };
-}
 
 describe('Observables from an async setTimeout', () => {
   let tlog: string[] = [];

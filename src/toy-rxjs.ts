@@ -25,6 +25,25 @@ export class Observable<T> {
     this.finished = true;
   }
 
+  static create<T>(createFn: CreateFn<T>): Observable<T> {
+    return new Observable(createFn);
+  }
+
+  static of<T>(...args: T[]): Observable<T> {
+    return new Observable((observer: Observer<T>): void => {
+      args.forEach((x: T) => {
+        observer.next(x);
+      });
+      observer.complete();
+    });
+  }
+
+  static empty<T>(): Observable<T> {
+    return new Observable((observer: Observer<T>): void => {
+      observer.complete();
+    });
+  }
+
   subscribe(o: Observer<T>): Subscription;
   subscribe(nextFn: (x: T) => void, errorFn?: (e: Error) => void, completeFn?: () => void): Subscription;
   subscribe(a: ((x: T) => void)| Observer<T>, errorFn?: (e: Error) => void, completeFn?: () => void): Subscription {
@@ -50,5 +69,33 @@ export class Observable<T> {
     };
 
   }
+
+  /**
+   *
+   * Operators
+   *
+   */
+
+  // take(n: number): Observable<T> {
+  //   return new Observable<T>((observer: Observer<T>) => {
+
+  map<U>(f: (x: T) => U): Observable<U> {
+    return new Observable((o: Observer<U>) => {
+      const oPatched: Observer<T> = {
+        next: (x: T) => o.next(f(x)),
+        error: o.error,
+        complete: o.complete
+      };
+      return this.createFn(oPatched);
+    });
+  }
+
+  // identity(): Observable<T> {
+  //   return new Observable((o: Observer<T>) => {
+  //     return this.createFn(o);
+  //   };
+  // }
+
+
 
 }
