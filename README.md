@@ -2,12 +2,13 @@ TODO
 
 * Rethink time stamps in async logging
 
-* interval
-* map
+
+* timer
 * flatMap/concatMap
 * switchMap
 * combineLatest?
 subscription.add
 
 Later
+* Scheduler
 * Subject

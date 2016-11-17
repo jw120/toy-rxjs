@@ -26,4 +26,10 @@ export function createAsyncLoggingObserver<T>(log: string[], label: string, done
   };
 }
 
-
+export function createLoggingObserverWithDone<T>(log: string[], done: DoneFn): Rx.Observer<T> {
+  return {
+    next: (x: T): void => { log.push(`next ${x}`); },
+    error: (e: Error): void => { log.push(`error ${e.message}`); done(); },
+    complete: (): void => { log.push(`complete`); done(); }
+  };
+}

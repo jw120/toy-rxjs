@@ -5,7 +5,7 @@
     /* Over-ride some basic formatting choices */
     "quotemark": [ true, "single" ],
     "trailing-comma": [ true, {"multiline": "never", "singleline": "never" } ],
-    "interface-name": false, /* Don't want to prefix interface names with I */
+    "interface-name": [ false ], /* Don't want to prefix interface names with I */
 
     /* Be a bit stricter */
     /* "no-any": true, */
@@ -15,7 +15,7 @@
     "variable-name": [true, "ban-keywords", "check-format"],
     "typedef": [true,
       "call-signature",
-      "arrow-call-signature",
+/*      "arrow-call-signature", */
       "parameter",
       "arrow-parameter",
       "property-declaration",
@@ -24,9 +24,10 @@
     ],
 
     /* Turn off some of the recommended/latest rules */
+    "member-ordering": [false],
     "object-literal-sort-keys": false, /* Don't care about literal key orders */
     "member-access": false, /* Don't want to have to put public/private etc for class members */
-    "ordered-imports": false, /* Don't care about import order */
+    "ordered-imports": [ false ], /* Don't care about import order */
     "no-string-literal": false, /* Allow object['literal'] notation */
     "no-console": [false] /* Allow use of console.log and friends */
   }

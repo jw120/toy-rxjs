@@ -16,5 +16,4 @@ describe('Observable.empty', () => {
     expect(tlog).toEqual(rlog);
   });
 
-
 });

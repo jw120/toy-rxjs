@@ -6,7 +6,7 @@ import { createLoggingObserver } from './logging-helper';
 describe('Observable.create', () => {
 
   it('Should work on a series of nexts', () => {
-    let c: (o: Rx.Observer<number>) => void = (observer: ToyRx.Observer<number>) => {
+    let c: (o: Rx.Observer<number>) => void = (observer: ToyRx.Observer<number>): void => {
       observer.next(1);
       observer.next(2);
       observer.next(3);
@@ -21,6 +21,5 @@ describe('Observable.create', () => {
     expect(tlog).toEqual(['next 1', 'next 2', 'next 3', 'complete']);
     expect(tlog).toEqual(rlog);
   });
-
 
 });

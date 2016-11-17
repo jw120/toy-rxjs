@@ -3,17 +3,17 @@ import * as Rx from 'rxjs/Rx';
 
 import { createLoggingObserver } from './logging-helper';
 
-describe('Observable.of', () => {
+describe('Observable.throw', () => {
 
-  it('Should work on an array', () => {
-    const xs: number[] = [1, 3, 5, 2];
+  it('should throw an error', () => {
+    const e: Error = Error('xyz');
     let tlog: string[] = [];
     let rlog: string[] = [];
-    ToyRx.Observable.of(...xs)
+    ToyRx.Observable.throw(e)
       .subscribe(createLoggingObserver(tlog));
-    Rx.Observable.of(...xs)
+    Rx.Observable.throw(e)
       .subscribe(createLoggingObserver(rlog));
-    expect(tlog).toEqual(['next 1', 'next 3', 'next 5', 'next 2', 'complete']);
+    expect(tlog).toEqual(['error xyz']);
     expect(tlog).toEqual(rlog);
   });
 

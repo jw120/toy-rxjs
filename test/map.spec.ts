@@ -18,5 +18,4 @@ describe('map operator', () => {
     expect(tlog).toEqual(rlog);
   });
 
-
 });
