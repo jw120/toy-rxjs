@@ -1,9 +1,10 @@
-import { Observable, SubscribeFn, TearDown } from '../Observable';
+import { Observable, SubscribeFn } from '../Observable';
 import { Observer } from '../Observer';
+import { TearDownLogic } from '../Subscription';
 
 export function take<T>(first: SubscribeFn<T>, n: number): Observable<T> {
 
-  return new Observable<T>((o: Observer<T>): TearDown => {
+  return new Observable<T>((o: Observer<T>): TearDownLogic => {
     let count: number = 0;
     return first({
       next: (x: T): void => {

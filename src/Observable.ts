@@ -1,4 +1,5 @@
 import { Observer } from './Observer';
+import { Subscription, TearDownLogic } from './Subscription';
 
 import { interval } from './observable-static/async';
 import { empty, never, of, staticThrow } from './observable-static/simple';
@@ -12,12 +13,7 @@ export interface Subscription {
   unsubscribe: () => void;
 }
 
-type NoArgFunction = () => void;
-export type TearDown
-  = NoArgFunction
-  | void;
-
-export type SubscribeFn<T> = (o: Observer<T>) => TearDown;
+export type SubscribeFn<T> = (o: Observer<T>) => TearDownLogic;
 
 export class Observable<T> {
 
@@ -56,16 +52,20 @@ export class Observable<T> {
 
     // We wrap the observer so that we stop passing values after a complete or error
     let finished: boolean = false;
-    const unsub: TearDown = this._subscribe({
+    const unsub: TearDownLogic = this._subscribe({
       next: (x: T): void => { if (!finished) { rawObserver.next(x); } },
       error: (e: Error): void => { if (!finished) { finished = true; rawObserver.error(e); } },
       complete: (): void => { if (!finished) { finished = true; rawObserver.complete(); } }
     });
 
-    // We return the unsubscription method from the createFn as a Subscriber, if there is one
-    return {
-      unsubscribe: unsub || null
-    };
+    // We return the unsubscription method from the createFn as a Subscriber
+    if (typeof unsub === 'function') {
+      return new Subscription(unsub);
+    } else if (typeof unsub === 'object') {
+      return new Subscription((unsub as any).unsubscribe);
+    } else {
+      return new Subscription(undefined);
+    }
 
   }
 

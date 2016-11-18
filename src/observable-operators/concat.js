@@ -1,11 +1,16 @@
 "use strict";
 const Observable_1 = require("../Observable");
+const Subscription_1 = require("../Subscription");
 function concat(first, second) {
     return new Observable_1.Observable((o) => {
         let state = { state: 'First' };
         let queue = [];
-        first(patchFirstObserver(o, state, queue));
-        return second(patchSecondObserver(o, state, queue));
+        let firstTearDown = first(patchFirstObserver(o, state, queue));
+        let secondTearDown = second(patchSecondObserver(o, state, queue));
+        return () => {
+            Subscription_1.callTearDownLogic(firstTearDown);
+            Subscription_1.callTearDownLogic(secondTearDown);
+        };
     });
 }
 exports.concat = concat;
