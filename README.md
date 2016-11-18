@@ -6,7 +6,9 @@ I started to write my own toy version.
 
 TODO
 
-* Add tests for Subscription
+* Subscription
+  - Separate out TearDownLogic
+  - Make concat work with teardown for both sync and async
 * Add JSDoc? or at least more comments
 * What should take do with excess completes and errors?
 * Rethink time stamps in async logging

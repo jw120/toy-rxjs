@@ -1,5 +1,5 @@
 import { Observer } from './Observer';
-import { Subscription, TearDownLogic } from './Subscription';
+import { extractFn, Subscription, TearDownLogic } from './Subscription';
 
 import { interval } from './observable-static/async';
 import { empty, never, of, staticThrow } from './observable-static/simple';
@@ -58,14 +58,20 @@ export class Observable<T> {
       complete: (): void => { if (!finished) { finished = true; rawObserver.complete(); } }
     });
 
-    // We return the unsubscription method from the createFn as a Subscriber
-    if (typeof unsub === 'function') {
-      return new Subscription(unsub);
-    } else if (typeof unsub === 'object') {
-      return new Subscription((unsub as any).unsubscribe);
-    } else {
-      return new Subscription(undefined);
+    const subscription: Subscription = new Subscription(extractFn(unsub));
+    if (finished) {
+      subscription.unsubscribe();
     }
+    return subscription;
+
+    // // We return the unsubscription method from the createFn as a Subscriber
+    // if (typeof unsub === 'function') {
+    //   return new Subscription(unsub);
+    // } else if (typeof unsub === 'object') {
+    //   return new Subscription((unsub as any).unsubscribe);
+    // } else {
+    //   return new Subscription(undefined);
+    // }
 
   }
 

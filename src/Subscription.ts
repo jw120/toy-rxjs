@@ -51,13 +51,15 @@ export class Subscription {
  // Disposes the resources held by the subscription. May, for instance, cancel an ongoing Observable execution
  // or cancel any other type of work that started when the Subscription was created.
   unsubscribe(): void {
-    this.tearDownList.forEach((f: NoArgFn) => f());
-    this.closed = true;
+    if (!this.closed) {
+      this.tearDownList.forEach((f: NoArgFn) => f());
+      this.closed = true;
+    }
   }
 }
 
 // Helper function to extract the unsubscribe function from the TearDownLogic
-function extractFn(teardown: TearDownLogic): NoArgFn | undefined {
+export function extractFn(teardown: TearDownLogic): NoArgFn | undefined {
   if (typeof teardown === 'function') {
     return teardown;
   }
