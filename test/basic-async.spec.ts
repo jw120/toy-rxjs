@@ -1,7 +1,7 @@
 /* tslint:disable:typedef */ // typedefs are too unwieldy for delay/repeat/forever
 
 import * as Rx from 'rxjs/Rx';
-import * as ToyRx from '../src/toy-rxjs';
+import * as ToyRx from '../src/Rx';
 
 import { createAsyncLoggingObserver } from './logging-helper';
 
