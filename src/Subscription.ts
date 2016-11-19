@@ -44,7 +44,8 @@ export class Subscription {
 
  // Disposes the resources held by the subscription. May, for instance, cancel an ongoing Observable execution
  // or cancel any other type of work that started when the Subscription was created.
-  unsubscribe(): void {
+ // This is an arrow function so that it will work if the Subscription is used as TearDownLogic (when this is lost)
+  unsubscribe: () => void = (): void => {
     if (!this.closed) {
       this.tearDownList.forEach((f: NoArgFn) => f());
       this.closed = true;

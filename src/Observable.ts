@@ -1,7 +1,7 @@
 import { Observer } from './Observer';
 import { Subscription } from './Subscription';
 
-import { interval } from './observable-static/async';
+import { interval, timer } from './observable-static/async';
 import { empty, never, of, staticThrow } from './observable-static/simple';
 import { range } from './observable-static/sync';
 import { subscribe } from './observable-operators/subscribe';
@@ -34,6 +34,7 @@ export class Observable<T> {
   static never<T>(): Observable<T> { return never(); }
   static range(start: number, count: number): Observable<number> { return range(start, count); }
   static interval(period: number): Observable<number> { return interval(period); }
+  static timer(delay: number | Date, period: number): Observable<number> { return timer(delay, period); }
 
   // operators pulled in from observable-operators (where they are defined as functions on SubscribeFns)
   map<U>(project: (x: T) => U): Observable<U> { return map(this._subscribe, project); }

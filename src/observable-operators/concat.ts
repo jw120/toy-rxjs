@@ -1,6 +1,9 @@
 import { Observable, SubscribeFn } from '../Observable';
 import { Observer } from '../Observer';
-import { TearDownLogic, callTearDownLogic } from '../utils/TearDownLogic';
+import { Subscription } from '../Subscription';
+
+import { subscribe } from './subscribe';
+import { TearDownLogic } from '../utils/TearDownLogic';
 
 // We run through 3 modes: start with the first observable active (with any values from the
 // second going into a queue), then the second observable becomes active, then none are active
@@ -22,12 +25,9 @@ export function concat<T>(first: SubscribeFn<T>, second: SubscribeFn<T>): Observ
     let state: State = { state: 'First' };
     let queue: QueueItem<T>[] = [];
 
-    let firstTearDown: TearDownLogic = first(patchFirstObserver<T>(o, state, queue));
-    let secondTearDown: TearDownLogic = second(patchSecondObserver<T>(o, state, queue));
-    return (): void => {
-      callTearDownLogic(firstTearDown);
-      callTearDownLogic(secondTearDown);
-    };
+    let firstSub: Subscription = subscribe(first, patchFirstObserver<T>(o, state, queue));
+    let secondSub: Subscription = subscribe(second, patchSecondObserver<T>(o, state, queue));
+    return firstSub.add(secondSub);
 
   });
 
