@@ -1,6 +1,6 @@
 import { Observable, SubscribeFn } from '../Observable';
 import { Observer } from '../Observer';
-import { TearDownLogic, callTearDownLogic } from '../Subscription';
+import { TearDownLogic, callTearDownLogic } from '../utils/TearDownLogic';
 
 // We run through 3 modes: start with the first observable active (with any values from the
 // second going into a queue), then the second observable becomes active, then none are active

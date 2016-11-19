@@ -1,9 +1,11 @@
 import { Observer } from './Observer';
-import { extractFn, Subscription, TearDownLogic } from './Subscription';
+import { Subscription } from './Subscription';
 
 import { interval } from './observable-static/async';
 import { empty, never, of, staticThrow } from './observable-static/simple';
 import { range } from './observable-static/sync';
+import { subscribe } from './observable-operators/subscribe';
+import { TearDownLogic } from './utils/TearDownLogic';
 
 import { concat } from './observable-operators/concat';
 import { map } from './observable-operators/map';
@@ -38,40 +40,15 @@ export class Observable<T> {
   concat(o: Observable<T>): Observable<T> { return concat(this._subscribe, o._subscribe); }
   take(n: number): Observable<T> { return take(this._subscribe, n); }
 
-  // Subscribe method
+  // Subscribe method - needs to handle function form as well as observable
   subscribe(o: Observer<T>): Subscription;
   subscribe(nextFn: (x: T) => void, errorFn?: (e: Error) => void, completeFn?: () => void): Subscription;
   subscribe(a: ((x: T) => void)| Observer<T>, errorFn?: (e: Error) => void, completeFn?: () => void): Subscription {
-
-    // We start with our raw observer - either supplied as an argument or built with given functions
-    let rawObserver: Observer<T> = (typeof a === 'object') ? a : {
+    return subscribe(this._subscribe, (typeof a === 'object') ? a : {
         next: a,
         error: errorFn || ((): void => { /* nothing */ }),
         complete: completeFn || ((): void => { /* nothing */ })
-    };
-
-    // We wrap the observer so that we stop passing values after a complete or error
-    let finished: boolean = false;
-    const unsub: TearDownLogic = this._subscribe({
-      next: (x: T): void => { if (!finished) { rawObserver.next(x); } },
-      error: (e: Error): void => { if (!finished) { finished = true; rawObserver.error(e); } },
-      complete: (): void => { if (!finished) { finished = true; rawObserver.complete(); } }
     });
-
-    const subscription: Subscription = new Subscription(extractFn(unsub));
-    if (finished) {
-      subscription.unsubscribe();
-    }
-    return subscription;
-
-    // // We return the unsubscription method from the createFn as a Subscriber
-    // if (typeof unsub === 'function') {
-    //   return new Subscription(unsub);
-    // } else if (typeof unsub === 'object') {
-    //   return new Subscription((unsub as any).unsubscribe);
-    // } else {
-    //   return new Subscription(undefined);
-    // }
 
   }
 

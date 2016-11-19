@@ -1,11 +1,5 @@
 
-type NoArgFn = () => void;
-
-export type TearDownLogic
-  = NoArgFn
-  | {  unsubscribe: NoArgFn }
-  | void;
-
+import { extractFn, NoArgFn, TearDownLogic} from './utils/TearDownLogic';
 export class Subscription {
 
   // A flag to indicate whether this Subscription has already been unsubscribed.
@@ -55,26 +49,5 @@ export class Subscription {
       this.tearDownList.forEach((f: NoArgFn) => f());
       this.closed = true;
     }
-  }
-}
-
-// Helper function to extract the unsubscribe function from the TearDownLogic
-export function extractFn(teardown: TearDownLogic): NoArgFn | undefined {
-  if (typeof teardown === 'function') {
-    return teardown;
-  }
-  if (typeof teardown === 'object') {
-    let objTeardown: any = teardown as any;
-    if (objTeardown.unsubscribe !== undefined && typeof objTeardown.unsubscribe === 'function') {
-      return objTeardown.unsubscribe;
-    }
-  }
-  return undefined;
-}
-
-export function callTearDownLogic(teardown: TearDownLogic): void {
-  let f: NoArgFn | undefined = extractFn(teardown);
-  if (f !== undefined) {
-    f();
   }
 }

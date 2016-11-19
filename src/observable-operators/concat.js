@@ -1,6 +1,6 @@
 "use strict";
 const Observable_1 = require("../Observable");
-const Subscription_1 = require("../Subscription");
+const TearDownLogic_1 = require("../utils/TearDownLogic");
 function concat(first, second) {
     return new Observable_1.Observable((o) => {
         let state = { state: 'First' };
@@ -8,8 +8,8 @@ function concat(first, second) {
         let firstTearDown = first(patchFirstObserver(o, state, queue));
         let secondTearDown = second(patchSecondObserver(o, state, queue));
         return () => {
-            Subscription_1.callTearDownLogic(firstTearDown);
-            Subscription_1.callTearDownLogic(secondTearDown);
+            TearDownLogic_1.callTearDownLogic(firstTearDown);
+            TearDownLogic_1.callTearDownLogic(secondTearDown);
         };
     });
 }
