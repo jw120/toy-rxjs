@@ -6,5 +6,5 @@ yarn.lock
 /old
 src/**/*.js
 src/**/*.js.map
-test/**/*.js
-test/**/*.js.map
+spec/**/*.js
+spec/**/*.js.map
