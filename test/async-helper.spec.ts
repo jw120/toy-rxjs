@@ -55,7 +55,7 @@ describe('async from array', () => {
 
 });
 
-function two(done: DoneFn, a: ((d: () => void) => void), b: (d: () => void) => void) {
+function two(done: DoneFn, a: ((d: () => void) => void), b: (d: () => void) => void): void {
   let finished1: boolean = false;
   let finished2: boolean = false;
   a(() => {
@@ -88,7 +88,7 @@ describe('async from array with two helper', () => {
 
 // Start the given async functions (which all take done functions which they call at the end)
 // and call done when all are completed
-function multiple(done: DoneFn, ...asyncFns: Array<((d: () => void) => void)>) {
+function multiple(done: DoneFn, ...asyncFns: Array<((d: () => void) => void)>): void {
   let finished: Array<boolean> = asyncFns.map(() => false);
   let countFinished: number = 0;
   asyncFns.forEach((f: (d: () => void) => void, i: number) => {
@@ -121,6 +121,3 @@ describe('async from array with multiple helper', () => {
   });
 
 });
-
-
-

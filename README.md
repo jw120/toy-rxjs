@@ -4,8 +4,12 @@ Starting to use Angular 2, I began to make heavy use of Observables from
 the RxJs library. In order to better understand the `magic' within the library,
 I started to write my own toy version.
 
+Major simplifications:
+* No scheduler. All observable are either created by...
+
 ## TODO
 
+* Todo - finish basic creation set - fromIterable as basic?
 * async-helper-spec.ts looks promising. Is there sugar for the done-handling? Add this type of async to our creators?
 can we use logging version that captures [time, message] pairs?
 
