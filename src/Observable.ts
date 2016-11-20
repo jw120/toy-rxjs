@@ -2,14 +2,18 @@ import { Observer } from './Observer';
 import { Subscription } from './Subscription';
 
 import { interval, timer } from './observable-static/async';
-import { empty, never, of, staticThrow } from './observable-static/simple';
+import { empty, of } from './observable-static/iterable';
+import { never } from './observable-static/never';
+
 import { range } from './observable-static/sync';
-import { subscribe } from './observable-operators/subscribe';
-import { TearDownLogic } from './utils/TearDownLogic';
+import { staticThrow } from './observable-static/throw';
 
 import { concat } from './observable-operators/concat';
 import { map } from './observable-operators/map';
+import { subscribe } from './observable-operators/subscribe';
 import { take } from './observable-operators/take';
+
+import { TearDownLogic } from './utils/TearDownLogic';
 
 export interface Subscription {
   unsubscribe: () => void;

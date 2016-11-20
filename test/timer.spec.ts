@@ -47,7 +47,7 @@ describe('Observable.timer with Date delay', () => {
   });
 
   it('should work', () => {
-    console.log(tlog);
+    // console.log(tlog);
     expect(tlog.length).toBe(3);
     expect(tlog).toEqual(rlog);
   });

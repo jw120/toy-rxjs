@@ -9,7 +9,7 @@ Major simplifications:
 
 ## TODO
 
-* Todo - finish basic creation set - fromIterable as basic?
+* Todo - finish basic creation set - around fromIterable. Simpligy tests. Refactor test files.
 * async-helper-spec.ts looks promising. Is there sugar for the done-handling? Add this type of async to our creators?
 can we use logging version that captures [time, message] pairs?
 

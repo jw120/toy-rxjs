@@ -17,8 +17,9 @@ function asyncObsFromArray(xs: number[], i: number = 0): ToyRx.Observable<number
 }
 
 function timedLog(s: string): void {
-  let now: number = Date.now() % 10000;
-  console.log(`${now}: ${s}`);
+  // let now: number = Date.now() % 10000;
+  s = s;
+  // console.log(`${now}: ${s}`);
 }
 
 function logObserver(onEnd: () => void): ToyRx.Observer<number> {
@@ -48,7 +49,7 @@ describe('async from array', () => {
 
   it ('works', (done: DoneFn) => {
 
-    console.log('nothing else');
+    // console.log('nothing else');
     done();
 
   });
@@ -79,7 +80,7 @@ describe('async from array with two helper', () => {
 
   it ('works', (done: DoneFn) => {
 
-    console.log('nothing else');
+    // console.log('nothing else');
     done();
 
   });
@@ -115,7 +116,7 @@ describe('async from array with multiple helper', () => {
 
   it ('works', (done: DoneFn) => {
 
-    console.log('nothing else');
+    // console.log('nothing else');
     done();
 
   });
