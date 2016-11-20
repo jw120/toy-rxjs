@@ -1,17 +1,23 @@
 # Toy RxJs library
 
 Starting to use Angular 2, I began to make heavy use of Observables from
-the RxJs library. In order to better understand the `magic' within the library,
-I started to write my own toy version.
+the RxJs library (v5). In order to better understand the `magic' within the library,
+I started to write my own toy version to explore the API.
 
-Major simplifications:
-* No scheduler. All observable are either created by...
+This now implements most of the RxJS API, with the major Simplification
+that there is no real scheduler. All observables run as JavaScript functions
+(as if passed to Observer.create). A value of `Scheduler.async` can be used
+to make creation methods (like `Obserable.of`) produce an asynchronous
+Observable by using the node `setInterval` function, but there is no functional
+`Scheduler` class. This also means we do not have the nice marble testing
+from `RxJs`.
 
-Note - no schedulers used for timer and fromPromise
+For all of our tests we compare the result from our toy implementation with
+the expected result and with the result from running with the full Rxjs library.
 
 ## TODO
 
-* Next - tests for iterators
+* Next - finish tests
 * Todo - finish basic creation set - around fromIterable. Simpligy tests. Refactor test files.
 * async-helper-spec.ts looks promising. Is there sugar for the done-handling? Add this type of async to our creators?
 can we use logging version that captures [time, message] pairs?
@@ -50,11 +56,24 @@ Tests
 
 ### Creation
 
+Written and tests freshened
 * create - done
 * never - done
-* empty - done
-* of - done
+* empty - done (with async)
 * throw - done
+
+Tests to freshened
+of
+range
+interval
+timer
+map
+take
+interval-take
+concat
+unsubsribe
+
+* of - done
 * interval - done
 * range - done
 * timer - done

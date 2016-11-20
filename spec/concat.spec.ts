@@ -1,7 +1,7 @@
 import * as ToyRx from '../src/Rx';
 import * as Rx from 'rxjs/Rx';
 
-import { createLoggingObserver } from './logging-helper';
+import { Log } from './helpers/log';
 
 describe('concat operator', () => {
 

@@ -1,20 +1,45 @@
 import * as ToyRx from '../src/Rx';
 import * as Rx from 'rxjs/Rx';
 
-import { createLoggingObserver } from './logging-helper';
+import { Log } from './helpers/log';
 
-describe('Observable.throw', () => {
+const e: Error = Error('xyz');
 
-  it('should throw an error', () => {
-    const e: Error = Error('xyz');
-    let tlog: string[] = [];
-    let rlog: string[] = [];
+describe('Observable.throw (synchronous)', () => {
+
+ it('should work', () => {
+    let tlog: Log<number> = new Log();
+    let rlog: Log<number> = new Log();
     ToyRx.Observable.throw(e)
-      .subscribe(createLoggingObserver(tlog));
+      .subscribe(tlog);
     Rx.Observable.throw(e)
-      .subscribe(createLoggingObserver(rlog));
-    expect(tlog).toEqual(['error xyz']);
-    expect(tlog).toEqual(rlog);
+      .subscribe(rlog);
+    expect(tlog.log).toEqual(['error xyz']);
+    expect(tlog.log).toEqual(rlog.log);
+  });
+
+});
+
+describe('Observable.throw (asynchronous)', () => {
+
+  let tlog: Log<number>;
+  let rlog: Log<number>;
+
+  beforeEach((done: DoneFn) => {
+    tlog = new Log(done);
+    ToyRx.Observable.throw(e, ToyRx.Scheduler.async)
+      .subscribe(tlog);
+  });
+
+  beforeEach((done: DoneFn) => {
+    rlog = new Log(done);
+    Rx.Observable.throw(e, Rx.Scheduler.async)
+      .subscribe(rlog);
+  });
+
+  it('works', () => {
+    expect(tlog.log).toEqual(['error xyz']);
+    expect(tlog.log).toEqual(rlog.log);
   });
 
 });

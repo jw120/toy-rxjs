@@ -1,19 +1,19 @@
 import * as ToyRx from '../src/Rx';
 import * as Rx from 'rxjs/Rx';
 
-import { createLoggingObserver } from './logging-helper';
+import { Log } from './helpers/log';
 
 describe('Observable.never', () => {
 
   it('should do nothing', () => {
-    let tlog: string[] = [];
-    let rlog: string[] = [];
+    let tlog: Log<number> = new Log();
+    let rlog: Log<number> = new Log();
     ToyRx.Observable.never()
-      .subscribe(createLoggingObserver(tlog));
+      .subscribe(tlog);
     Rx.Observable.never()
-      .subscribe(createLoggingObserver(rlog));
-    expect(tlog).toEqual([]);
-    expect(tlog).toEqual(rlog);
+      .subscribe(rlog);
+    expect(tlog.log).toEqual([]);
+    expect(tlog.log).toEqual(rlog.log);
   });
 
 });
