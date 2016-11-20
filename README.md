@@ -7,8 +7,11 @@ I started to write my own toy version.
 Major simplifications:
 * No scheduler. All observable are either created by...
 
+Note - no schedulers used for timer and fromPromise
+
 ## TODO
 
+* Next - tests for iterators
 * Todo - finish basic creation set - around fromIterable. Simpligy tests. Refactor test files.
 * async-helper-spec.ts looks promising. Is there sugar for the done-handling? Add this type of async to our creators?
 can we use logging version that captures [time, message] pairs?
@@ -49,22 +52,23 @@ Tests
 
 * create - done
 * never - done
+* empty - done
+* of - done
+* throw - done
+* interval - done
+* range - done
+* timer - done
+* fromPromise - to do, easy
 
-* empty - done (without Scheduler)
-* interval - done (without Scheduler)
-* of - done (without Scheduler)
-* range - done (without Scheduler)
-* throw - done (without Scheduler)
-* timer - done (without Scheduler)
+* from - to do, medium (without Scheduler)
+
 
 * bindCallback - to do, easy
 * bindNodeCallback - to do, easy
-* fromPromise - to do, easy
 
 * defer - to do, medium
 * fromEvent - to do, medium
 * fromEventPattern - to do, medium
-* from - to do, medium (without Scheduler)
 
 * repeat - needs Scheduler
 * repeatWhen - needs Scheduler

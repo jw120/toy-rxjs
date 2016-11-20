@@ -9,13 +9,13 @@ export function timer(delayMsOrDate: number | Date, period: number): Observable<
     delay = delayMsOrDate.getTime() - Date.now();
   }
   return new Observable((observer: Observer<number>):  (() => void) => {
-    let id: any = setTimeout(() => {
+    let id: number = setTimeout(() => {
         let i: number = 0;
         observer.next(i++);
         id = setInterval(() => {
           observer.next(i++);
         }, period);
     }, delay);
-    return (): void => clearInterval(id);
+    return (): void => clearTimeout(id);
   });
 }
