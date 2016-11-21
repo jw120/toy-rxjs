@@ -35,3 +35,47 @@ export class Log<T> implements Rx.Observer<T> {
   }
 
 }
+
+interface TimedLogEntry {
+  time: number;
+  value: string;
+}
+
+export class TimedLog<T> implements Rx.Observer<T> {
+
+  private _log: TimedLogEntry[] = [];
+  private start: number;
+
+  constructor(private done?: () => void) {
+    this.start = Date.now();
+  }
+
+  next(x: T): void {
+    this._log.push({ time: Date.now() - this.start, value: 'next ' + x });
+  }
+
+  error(e: Error): void {
+    this._log.push({ time: Date.now() - this.start, value: 'error ' + e.message });
+    if (this.done) {
+      this.done();
+    }
+  }
+
+  complete(): void {
+    this._log.push({ time: Date.now() - this.start, value: 'complete' });
+    if (this.done) {
+      this.done();
+    }
+  }
+
+  isCloseTo(times: number[], values: string[], tolerance: [number, number]): boolean {
+    return this._log.length === times.length &&
+      this._log.length === values.length &&
+      this._log.every((entry: TimedLogEntry, i: number) => {
+        return entry.time > times[i] + tolerance[0] &&
+          entry.time < times[i] + tolerance[1] &&
+          entry.value === entry.value;
+      });
+  }
+
+}
