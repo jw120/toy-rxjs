@@ -17,8 +17,7 @@ the expected result and with the result from running with the full Rxjs library.
 
 ## TODO
 
-* Get all tests to compile again
-* Review tests
+* Review tests and re-factor, comparing to spec
   - Excess done's in timer.spec?
 * Add a hot observable
 * Todo - finish basic creation set - around fromIterable. Simpligy tests. Refactor test files.
@@ -60,8 +59,9 @@ Tests
 ### Creation
 
 Written and tests freshened
+* never (scheduler n/a) - done
+
 * create - done
-* never - done
 * empty - done (with async)
 * throw - done
 
