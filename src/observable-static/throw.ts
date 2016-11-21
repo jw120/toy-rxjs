@@ -1,6 +1,6 @@
 /**
  *
- * Creating an Observable that just passed an error (named staticThrow to avoid clash
+ * Defines static functional version of Observable.throw (named staticThrow to avoid clash
  * with JavaScript keyword)
  *
  */
@@ -9,6 +9,7 @@ import { Observable } from '../Observable';
 import { Observer } from '../Observer';
 import { Scheduler } from '../Scheduler';
 
+/** Creates an Observable that emits no items to the Observer and immediately emits an error notification. */
 export function staticThrow<T>(e: Error, scheduler?: Scheduler): Observable<T> {
 
   // Default is to create a synchronous observable

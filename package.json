@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "Toy implemtation of some of rxjs 5 made for personal learning purposes",
   "scripts": {
-    "test": "jasmine spec/*spec.js",
+    "test": "jasmine src/**/*.spec.js",
     "compile": "tsc",
-    "lint": "tslint src/**/*.ts spec/**/*.ts"
+    "lint": "tslint src/**/*.ts"
   },
   "author": "",
   "license": "MIT",

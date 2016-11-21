@@ -1,5 +1,7 @@
 /**
- * Simple module to
+ *
+ * Defines a logging observable for use in testing
+ *
  */
 
 import * as Rx from 'rxjs/Rx';
