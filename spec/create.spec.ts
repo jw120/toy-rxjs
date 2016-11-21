@@ -64,7 +64,7 @@ describe('Observable.create (synchronous)', () => {
     let tobs: ToyRx.Observable<number> = ToyRx.Observable.create(c);
     tobs.subscribe(tlog1);
     tobs.subscribe(tlog2);
-    let robs: Rx.Observable<number> = Rx.Observable.create(c)
+    let robs: Rx.Observable<number> = Rx.Observable.create(c);
     robs.subscribe(rlog1);
     robs.subscribe(rlog2);
     expect(tlog1.log).toEqual(['next 1', 'next 2', 'complete']);

@@ -8,14 +8,14 @@ describe('concat operator', () => {
   it('Should work with regular synchronous observables', () => {
     const xs: number[] = [1, 2, 3];
     const ys: number[] = [4, 5];
-    let tlog: string[] = [];
-    let rlog: string[] = [];
+    let tlog: Log<number> = new Log();
+    let rlog: Log<number> = new Log();
     ToyRx.Observable.of(...xs).concat(ToyRx.Observable.of(...ys))
-      .subscribe(createLoggingObserver(tlog));
+      .subscribe(tlog);
     Rx.Observable.of(...xs).concat(Rx.Observable.of(...ys))
-      .subscribe(createLoggingObserver(rlog));
-    expect(tlog).toEqual(['next 1', 'next 2', 'next 3', 'next 4', 'next 5', 'complete']);
-    expect(tlog).toEqual(rlog);
+      .subscribe(rlog);
+    expect(tlog.log).toEqual(['next 1', 'next 2', 'next 3', 'next 4', 'next 5', 'complete']);
+    expect(tlog.log).toEqual(rlog.log);
   });
 
   it('Should work with synchronous observables where streams continues after completion', () => {
@@ -30,16 +30,16 @@ describe('concat operator', () => {
       o.complete();
       o.next(4);
     }
-    let tlog: string[] = [];
-    let rlog: string[] = [];
+    let tlog: Log<number> = new Log();
+    let rlog: Log<number> = new Log();
     ToyRx.Observable.create(f1)
      .concat(ToyRx.Observable.create(f2))
-      .subscribe(createLoggingObserver(tlog));
+      .subscribe(tlog);
     Rx.Observable.create(f1)
      .concat(Rx.Observable.create(f2))
-      .subscribe(createLoggingObserver(rlog));
-    expect(tlog).toEqual(['next 1', 'next 2', 'next 3', 'complete']);
-    expect(tlog).toEqual(rlog);
+      .subscribe(rlog);
+    expect(tlog.log).toEqual(['next 1', 'next 2', 'next 3', 'complete']);
+    expect(tlog.log).toEqual(rlog.log);
   });
 
   it('Should work with synchronous observables where streams do not complete', () => {
@@ -51,16 +51,16 @@ describe('concat operator', () => {
       o.next(9);
       o.next(10);
     }
-    let tlog: string[] = [];
-    let rlog: string[] = [];
+    let tlog: Log<number> = new Log();
+    let rlog: Log<number> = new Log();
     ToyRx.Observable.create(f1)
      .concat(ToyRx.Observable.create(f2))
-      .subscribe(createLoggingObserver(tlog));
+      .subscribe(tlog);
     Rx.Observable.create(f1)
      .concat(Rx.Observable.create(f2))
-      .subscribe(createLoggingObserver(rlog));
-    expect(tlog).toEqual(['next 7', 'next 8']);
-    expect(tlog).toEqual(rlog);
+      .subscribe(rlog);
+    expect(tlog.log).toEqual(['next 7', 'next 8']);
+    expect(tlog.log).toEqual(rlog.log);
   });
 
   it('Should work with synchronous observables where first stream ends in an error', () => {
@@ -78,16 +78,16 @@ describe('concat operator', () => {
       o.next(4);
       o.error(Error('Cannot be reached'));
     }
-    let tlog: string[] = [];
-    let rlog: string[] = [];
+    let tlog: Log<number> = new Log();
+    let rlog: Log<number> = new Log();
     ToyRx.Observable.create(f1)
       .concat(ToyRx.Observable.create(f2))
-      .subscribe(createLoggingObserver(tlog));
+      .subscribe(tlog);
     Rx.Observable.create(f1)
       .concat(Rx.Observable.create(f2))
-      .subscribe(createLoggingObserver(rlog));
-    expect(tlog).toEqual(['next 1', 'next 2', 'error fail!']);
-    expect(tlog).toEqual(rlog);
+      .subscribe(rlog);
+    expect(tlog.log).toEqual(['next 1', 'next 2', 'error fail!']);
+    expect(tlog.log).toEqual(rlog.log);
   });
 
 });

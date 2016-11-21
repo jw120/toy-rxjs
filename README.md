@@ -17,7 +17,10 @@ the expected result and with the result from running with the full Rxjs library.
 
 ## TODO
 
-* Next - finish tests
+* Get all tests to compile again
+* Review tests
+  - Excess done's in timer.spec?
+* Add a hot observable
 * Todo - finish basic creation set - around fromIterable. Simpligy tests. Refactor test files.
 * async-helper-spec.ts looks promising. Is there sugar for the done-handling? Add this type of async to our creators?
 can we use logging version that captures [time, message] pairs?

@@ -1,32 +1,32 @@
 import * as ToyRx from '../src/Rx';
 import * as Rx from 'rxjs/Rx';
 
-import { createLoggingObserver, createLoggingObserverWithDone } from './logging-helper';
+import { Log } from './helpers/log';
 
 describe('Observable.of synchronous', () => {
 
   it('Should work on with no scheduler specified', () => {
     const xs: number[] = [1, 3, 5, 2];
-    let tlog: string[] = [];
-    let rlog: string[] = [];
+    let tlog: Log<number> = new Log();
+    let rlog: Log<number> = new Log();
     ToyRx.Observable.of(...xs)
-      .subscribe(createLoggingObserver(tlog));
+      .subscribe(tlog);
     Rx.Observable.of(...xs)
-      .subscribe(createLoggingObserver(rlog));
-    expect(tlog).toEqual(['next 1', 'next 3', 'next 5', 'next 2', 'complete']);
-    expect(tlog).toEqual(rlog);
+      .subscribe(rlog);
+    expect(tlog.log).toEqual(['next 1', 'next 3', 'next 5', 'next 2', 'complete']);
+    expect(tlog.log).toEqual(rlog.log);
   });
 
   it('Should work with the synchronous scheduler specified', () => {
     const xs: number[] = [1, 3, 5, 2];
-    let tlog: string[] = [];
-    let rlog: string[] = [];
+    let tlog: Log<number> = new Log();
+    let rlog: Log<number> = new Log();
     ToyRx.Observable.of(...xs, ToyRx.Scheduler.sync)
-      .subscribe(createLoggingObserver(tlog));
+      .subscribe(tlog);
     Rx.Observable.of(...xs) // Rx does not have a sync scheduler
-      .subscribe(createLoggingObserver(rlog));
-    expect(tlog).toEqual(['next 1', 'next 3', 'next 5', 'next 2', 'complete']);
-    expect(tlog).toEqual(rlog);
+      .subscribe(rlog);
+    expect(tlog.log).toEqual(['next 1', 'next 3', 'next 5', 'next 2', 'complete']);
+    expect(tlog.log).toEqual(rlog.log);
   });
 
 });
@@ -34,22 +34,24 @@ describe('Observable.of synchronous', () => {
 describe('Observable.of asynchronous', () => {
 
   const xs: number[] = [1, 3, 5, 2];
-  let tlog: string[] = [];
-  let rlog: string[] = [];
+  let tlog: Log<number>;
+  let rlog: Log<number>;
 
   beforeEach((done: DoneFn) => {
+    tlog = new Log<number>(done);
     ToyRx.Observable.of(...xs, ToyRx.Scheduler.async)
-      .subscribe(createLoggingObserverWithDone(tlog, done));
+      .subscribe(tlog);
   });
 
   beforeEach((done: DoneFn) => {
+    rlog = new Log(done);
     Rx.Observable.of<number>(...xs, Rx.Scheduler.async)
-      .subscribe(createLoggingObserverWithDone(rlog, done));
+      .subscribe(rlog);
   });
 
   it('should work', () => {
-    expect(tlog).toEqual(['next 1', 'next 3', 'next 5', 'next 2', 'complete']);
-    expect(tlog).toEqual(rlog);
+    expect(tlog.log).toEqual(['next 1', 'next 3', 'next 5', 'next 2', 'complete']);
+    expect(tlog.log).toEqual(rlog.log);
   });
 
 });
