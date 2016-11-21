@@ -1,6 +1,7 @@
 /**
  *
- * Creating an Observable from an iterator (and related functions)
+ * Defines static functional version of Observable creation operators that
+ * take iterators or iterables
  *
  */
 
@@ -8,7 +9,7 @@ import { Observable } from '../Observable';
 import { Observer } from '../Observer';
 import { isScheduler, Scheduler } from '../Scheduler';
 
-// Core function of this module
+/** Creates an Observable that emits from the iterator (not part of Rxjs API) */
 export function fromIterator<T>(iterator: Iterator<T>, period: number, scheduler: Scheduler): Observable<T> {
 
   // Default is to create a synchronous observable
@@ -39,12 +40,12 @@ export function fromIterator<T>(iterator: Iterator<T>, period: number, scheduler
 
 }
 
-// Simplly unwrap iterables
+/** Creates an Observable that emits from the iterable(not part of Rxjs API) */
 export function fromIterable<T>(iterable: Iterable<T>, period: number, scheduler: Scheduler): Observable<T> {
   return fromIterator(iterable[Symbol.iterator](), period, scheduler);
 }
 
-// Observable from arguments (last argument may be a Scheduler)
+/** Creates an Observable that emits the arguments provided (the last of which may be a Scheduler) */
 export function of<T>(...args: T[]): Observable<T> {
   if (args.length > 0) {
     let possibleScheduler: T | Scheduler = args[args.length - 1];
@@ -55,12 +56,12 @@ export function of<T>(...args: T[]): Observable<T> {
   return fromIterable(args, 0, undefined);
 }
 
-// Observable that just completes
+/** Creates an Observable that just completes */
 export function empty<T>(scheduler?: Scheduler): Observable<T> {
   return fromIterable<T>([], 0, scheduler);
 }
 
-// Observable with count integers starting from start
+/** Creates an Observable that emits ascending numbers  */
 export function range(start: number, count: number, scheduler?: Scheduler): Observable<number> {
   let i: number = 0;
   const iterator: Iterator<number> = {
@@ -69,7 +70,7 @@ export function range(start: number, count: number, scheduler?: Scheduler): Obse
   return fromIterator(iterator, 0, scheduler);
 }
 
-// Observable that emits sequential numbers starting from 0. Defaults to asynchronous Scheduler
+/** Creates an Observable that emits ascending numbers (Defaults to asynchronous Scheduler) */
 export function interval(period: number, scheduler?: Scheduler): Observable<number> {
   scheduler = scheduler || Scheduler.async;
   let i: number = 0;

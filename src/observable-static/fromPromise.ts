@@ -1,6 +1,6 @@
 /**
  *
- * Creating an Observable from an iterator (and related functions)
+ * Defines static functional version of Observable.never
  *
  */
 

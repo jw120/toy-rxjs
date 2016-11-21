@@ -5,7 +5,7 @@
  */
 
 import * as ToyRx from '../../src/Rx';
-import * as Rx from 'rxjs/Rx';
+import * as RefRx from 'rxjs/Rx';
 
 import { Log } from './log';
 
@@ -13,7 +13,7 @@ import { Log } from './log';
 export function compare2Sync<T>(
   itMessage: string,
   toyObs: ToyRx.Observable<T>,
-  refObs: Rx.Observable<T>,
+  refObs: RefRx.Observable<T>,
   expectedOutput: string[]
 ): void {
   it(itMessage, () => {
@@ -30,18 +30,25 @@ export function compare2Sync<T>(
 export function compare2Async<T>(
   itMessage: string,
   toyObs: ToyRx.Observable<T>,
-  refObs: Rx.Observable<T>,
-  expectedOutput: string[]
+  refObs: RefRx.Observable<T>,
+  expectedOutput: string[],
+  timeout?: number
 ): void {
   let toyLog: Log<T>;
   let refLog: Log<T>;
   beforeEach((done: DoneFn) => {
     toyLog = new Log(done);
-    toyObs.subscribe(toyLog);
+    const toySub: ToyRx.Subscription = toyObs.subscribe(toyLog);
+    if (timeout !== undefined) {
+      setTimeout(() => { toySub.unsubscribe(); done(); }, timeout);
+    }
   });
   beforeEach((done: DoneFn) => {
     refLog = new Log(done);
-    refObs.subscribe(refLog);
+    const refSub: RefRx.Subscription = refObs.subscribe(refLog);
+    if (timeout !== undefined) {
+      setTimeout(() => { refSub.unsubscribe(); done(); }, timeout);
+    }
   });
   it(itMessage, () => {
     expect(toyLog.log).toEqual(expectedOutput);

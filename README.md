@@ -17,8 +17,7 @@ the expected result and with the result from running with the full Rxjs library.
 
 ## TODO
 
-* Review tests and re-factor, comparing to spec
-  - Excess done's in timer.spec?
+* Finish migration of existing functionality to nice src with integrated spec and JSDoc
 * Add a hot observable
 * Todo - finish basic creation set - around fromIterable. Simpligy tests. Refactor test files.
 * async-helper-spec.ts looks promising. Is there sugar for the done-handling? Add this type of async to our creators?

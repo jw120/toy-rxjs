@@ -1,3 +1,9 @@
+/**
+ *
+ * Defines static functional version of Observable.never
+ *
+ */
+
 import { Observable } from '../Observable';
 import { Observer } from '../Observer';
 
