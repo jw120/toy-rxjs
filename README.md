@@ -18,17 +18,9 @@ the expected result and with the result from running with the full Rxjs library.
 
 ## TODO
 
-* Finish migration of existing functionality to nice src with integrated spec and JSDoc: timer is next
-  + timer - test multi-sub
-* Use completeEmit etc from take.spec.ts elsewhere
-* Improve JSDoc (how should opening comment in a module look)
-* isCloseTo as a jasmine matcher
+* concat
 * support thisArg in map?
-* elegant way to habndle unused param in map.spec.ts toIndex
 * Add a hot observable
-* Todo - finish basic creation set - around fromIterable. Simpligy tests. Refactor test files.
-* async-helper-spec.ts looks promising. Is there sugar for the done-handling? Add this type of async to our creators?
-can we use logging version that captures [time, message] pairs?
 
 Either
  * Seems like tno - Can we do Scheuler null/async and testscheduler keeping a function as the main driver.

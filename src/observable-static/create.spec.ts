@@ -2,7 +2,7 @@ import * as ToyRx from '../Rx';
 import * as RefRx from 'rxjs/Rx';
 
 import { Log } from '../test-helpers/log';
-import { itObs } from '../test-helpers/compare';
+import { completeEmits, itObs } from '../test-helpers/compare';
 
 describe('Observable.create (synchronous)', () => {
 
@@ -15,7 +15,7 @@ describe('Observable.create (synchronous)', () => {
   itObs('should work on a series of nexts',
     ToyRx.Observable.create(f1),
     RefRx.Observable.create(f1),
-    ['next 1', 'next 2', 'next 3', 'complete']
+    completeEmits(1, 2, 3)
   );
 
   function f2(observer: RefRx.Observer<number>): void {
@@ -40,7 +40,7 @@ describe('Observable.create (synchronous)', () => {
   itObs('should work with a premature complete',
     ToyRx.Observable.create(f3),
     RefRx.Observable.create(f3),
-    ['next 1', 'complete']
+    completeEmits(1)
   );
 
   it('should work with double subscriptions', () => {
@@ -54,7 +54,7 @@ describe('Observable.create (synchronous)', () => {
     let robs: RefRx.Observable<number> = RefRx.Observable.create(f1);
     robs.subscribe(rlog1);
     robs.subscribe(rlog2);
-    expect(tlog1.log).toEqual(['next 1', 'next 2', 'next 3', 'complete']);
+    expect(tlog1.log).toEqual(completeEmits(1, 2, 3));
     expect(tlog1.log).toEqual(tlog2.log);
     expect(tlog1.log).toEqual(rlog1.log);
     expect(tlog1.log).toEqual(rlog2.log);
@@ -67,7 +67,7 @@ describe('Observable.create (synchronous)', () => {
       (x: number) => tlog.next(x), (e: Error) => tlog.error(e), () => tlog.complete());
     RefRx.Observable.create(f1).subscribe(
       (x: number) => rlog.next(x), (e: Error) => rlog.error(e), () => rlog.complete());
-    expect(tlog.log).toEqual(['next 1', 'next 2', 'next 3', 'complete']);
+    expect(tlog.log).toEqual(completeEmits(1, 2, 3));
     expect(tlog.log).toEqual(rlog.log);
   });
 
