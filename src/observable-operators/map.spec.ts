@@ -1,21 +1,64 @@
-import * as ToyRx from '../src/Rx';
-import * as Rx from 'rxjs/Rx';
+import * as ToyRx from '../Rx';
+import * as RefRx from 'rxjs/Rx';
 
-import { Log } from './helpers/log';
+import { it2Sync, describe2Async, describe2AsyncClose } from '../test-helpers/compare';
 
-describe('map operator', () => {
+const input: number[] = [1, 9, 8, 4];
+const double: (x: number) => number = (x: number) => x * 2;
+const triple: (x: number) => number = (x: number) => x * 3;
+const toIndex: (x: number, i: number) => number = (x: number, i: number) => { x = x; return i; }
+const timesIndex: (x: number, i: number) => number = (x: number, i: number) => x * i;
+const doubled: string[] = ['next 2', 'next 18', 'next 16', 'next 8', 'complete'];
+const tripled: string[] = ['next 3', 'next 27', 'next 24', 'next 12', 'complete'];
+const indices: string[] = ['next 0', 'next 1', 'next 2', 'next 3', 'complete'];
+const timesIndices: string[] = ['next 0', 'next 9', 'next 16', 'next 12', 'complete'];
+const testMsg: string = 'testErr';
 
-  it('Should work with doubling', () => {
-    const xs: number[] = [1, 3, 5, 2];
-    let tlog: Log<number> = new Log();
-    let rlog: Log<number> = new Log();
-    const double: (x: number) => number = (x: number) => x * 2;
-    ToyRx.Observable.of(...xs).map(double)
-      .subscribe(tlog);
-    Rx.Observable.of(...xs).map(double)
-      .subscribe(rlog);
-    expect(tlog.log).toEqual(['next 2', 'next 6', 'next 10', 'next 4', 'complete']);
-    expect(tlog.log).toEqual(rlog.log);
-  });
+describe('map operator (with synchronous observable)', () => {
+
+  it2Sync('should work with doubling',
+    ToyRx.Observable.of(...input).map(double),
+    RefRx.Observable.of(...input).map(double),
+    doubled
+  );
+
+  it2Sync('should work with toIndex',
+    ToyRx.Observable.of(...input).map(toIndex),
+    RefRx.Observable.of(...input).map(toIndex),
+    indices
+  );
+
+  it2Sync('should work with timesIndex',
+    ToyRx.Observable.of(...input).map(timesIndex),
+    RefRx.Observable.of(...input).map(timesIndex),
+    timesIndices
+  );
+
+  it2Sync('should work with an error',
+    ToyRx.Observable.throw(Error(testMsg)).map(double),
+    RefRx.Observable.throw(Error(testMsg)).map(double),
+    ['error ' + testMsg]
+  );
+
+  it2Sync('should work with nothing',
+    ToyRx.Observable.never().map(double),
+    RefRx.Observable.never().map(double),
+    []
+  );
 
 });
+
+describe2Async('map operator (with asynchronous observable)', 'should work with tripling',
+  ToyRx.Observable.of(...input).map(triple),
+  RefRx.Observable.of(...input).map(triple),
+  tripled
+);
+
+describe2AsyncClose('map operator (with asynchronous observable)', 'should work with timeout',
+  ToyRx.Observable.interval(100).map(toIndex),
+  RefRx.Observable.interval(100).map(toIndex),
+  [100, 200, 300, 400],
+  ['next 0', 'next 1', 'next 2', 'next 3'],
+  [-10, 25],
+  450
+);

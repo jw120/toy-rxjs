@@ -65,7 +65,7 @@ export class Observable<T> {
   }
 
   // operators pulled in from observable-operators (where they are defined as functions on SubscribeFns)
-  map<U>(project: (x: T) => U): Observable<U> { return map(this._subscribe, project); }
+  map<U>(project: (x: T, i: number) => U): Observable<U> { return map(this._subscribe, project); }
   concat(o: Observable<T>): Observable<T> { return concat(this._subscribe, o._subscribe); }
   take(n: number): Observable<T> { return take(this._subscribe, n); }
 
