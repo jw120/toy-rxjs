@@ -6,7 +6,7 @@ import { it2Sync, describe2Async, describe2AsyncClose } from '../test-helpers/co
 const input: number[] = [1, 9, 8, 4];
 const double: (x: number) => number = (x: number) => x * 2;
 const triple: (x: number) => number = (x: number) => x * 3;
-const toIndex: (x: number, i: number) => number = (x: number, i: number) => { x = x; return i; }
+const toIndex: (x: number, i: number) => number = (x: number, i: number) => { x = x; return i; };
 const timesIndex: (x: number, i: number) => number = (x: number, i: number) => x * i;
 const doubled: string[] = ['next 2', 'next 18', 'next 16', 'next 8', 'complete'];
 const tripled: string[] = ['next 3', 'next 27', 'next 24', 'next 12', 'complete'];

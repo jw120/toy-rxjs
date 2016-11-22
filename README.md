@@ -20,7 +20,10 @@ the expected result and with the result from running with the full Rxjs library.
 
 * Finish migration of existing functionality to nice src with integrated spec and JSDoc: timer is next
   + timer - test multi-sub
+* Use completeEmit etc from take.spec.ts elsewhere
+* Improve JSDoc (how should opening comment in a module look)
 * isCloseTo as a jasmine matcher
+* support thisArg in map?
 * elegant way to habndle unused param in map.spec.ts toIndex
 * Add a hot observable
 * Todo - finish basic creation set - around fromIterable. Simpligy tests. Refactor test files.

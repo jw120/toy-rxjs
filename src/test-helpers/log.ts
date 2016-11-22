@@ -69,8 +69,10 @@ export class TimedLog<T> implements Rx.Observer<T> {
   }
 
   isCloseTo(times: number[], values: string[], tolerance: [number, number]): boolean {
+    if (times.length !== values.length) {
+      throw Error('Invalid input to isClose to (mismatched lengths)');
+    }
     let val: boolean = this._log.length === times.length &&
-      this._log.length === values.length &&
       this._log.every((entry: TimedLogEntry, i: number) => {
         return entry.time > times[i] + tolerance[0] &&
           entry.time < times[i] + tolerance[1] &&

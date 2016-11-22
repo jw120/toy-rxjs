@@ -9,6 +9,16 @@ import * as RefRx from 'rxjs/Rx';
 
 import { Log, TimedLog } from './log';
 
+/** Helper function to convert its arguments into an array of next's plus complete */
+export function completeEmits(...xs: any[]): string[] {
+  return incompleteEmits(...xs).concat('complete');
+}
+
+/** Helper function to convert its arguments into an array of next's */
+export function incompleteEmits(...xs: any[]): string[] {
+  return xs.map((x: any) => 'next ' + x.toString());
+}
+
 /** Subscribe to given observables synchronously with logging observer and expect both to equal given value */
 export function it2Sync<T>(
   itMessage: string,
