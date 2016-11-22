@@ -8,16 +8,19 @@ This now implements most of the RxJS API, with the major Simplification
 that there is no real scheduler. All observables run as JavaScript functions
 (as if passed to Observer.create). A value of `Scheduler.async` can be used
 to make creation methods (like `Obserable.of`) produce an asynchronous
-Observable by using the node `setInterval` function, but there is no functional
-`Scheduler` class. This also means we do not have the nice marble testing
-from `RxJs`.
+Observable by using the node `setInterval` function, but this is just
+a flag and there is no functional `Scheduler` class (to provide
+a sense of time and to schedule actions). This also means we do not
+have the nice marble testing from `RxJs`.
 
 For all of our tests we compare the result from our toy implementation with
 the expected result and with the result from running with the full Rxjs library.
 
 ## TODO
 
-* Finish migration of existing functionality to nice src with integrated spec and JSDoc
+* Finish migration of existing functionality to nice src with integrated spec and JSDoc: timer is next
+  + timer - test multi-sub
+* isCloseTo as a jasmine matcher
 * Add a hot observable
 * Todo - finish basic creation set - around fromIterable. Simpligy tests. Refactor test files.
 * async-helper-spec.ts looks promising. Is there sugar for the done-handling? Add this type of async to our creators?

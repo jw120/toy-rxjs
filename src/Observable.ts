@@ -60,7 +60,7 @@ export class Observable<T> {
     return interval(period, scheduler);
   }
 
-  static timer(delay: number | Date, period: number): Observable<number> {
+  static timer(delay: number | Date, period?: number): Observable<number> {
     return timer(delay, period);
   }
 

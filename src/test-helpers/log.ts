@@ -69,13 +69,17 @@ export class TimedLog<T> implements Rx.Observer<T> {
   }
 
   isCloseTo(times: number[], values: string[], tolerance: [number, number]): boolean {
-    return this._log.length === times.length &&
+    let val: boolean = this._log.length === times.length &&
       this._log.length === values.length &&
       this._log.every((entry: TimedLogEntry, i: number) => {
         return entry.time > times[i] + tolerance[0] &&
           entry.time < times[i] + tolerance[1] &&
           entry.value === entry.value;
       });
+    if (!val) {
+      console.log('Failed comparing', this._log, times, values, tolerance);
+    }
+    return val;
   }
 
 }
