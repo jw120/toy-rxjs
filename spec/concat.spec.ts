@@ -91,3 +91,35 @@ describe('concat operator', () => {
   });
 
 });
+
+
+/*
+  it('Should work with concat', () => {
+    let tlog: string[] = [];
+    let rlog: string[] = [];
+    ToyRx.Observable.create((o: Rx.Observer<number>) => {
+      o.next(3);
+      o.complete();
+      return { unsubscribe: () => { tlog.push('unsub a'); } };
+    })
+      .concat(ToyRx.Observable.create((o: Rx.Observer<number>) => {
+        o.next(4);
+        o.complete();
+        return { unsubscribe: () => { tlog.push('unsub b'); } };
+      }))
+      .subscribe((x: number) => tlog.push(`next ${x}`));
+    Rx.Observable.create((o: Rx.Observer<number>) => {
+      o.next(3);
+      o.complete();
+      return { unsubscribe: () => { rlog.push('unsub a'); } };
+    })
+      .concat(Rx.Observable.create((o: Rx.Observer<number>) => {
+        o.next(4);
+        o.complete();
+        return { unsubscribe: () => { rlog.push('unsub b'); } };
+      }))
+      .subscribe((x: number) => rlog.push(`next ${x}`));
+    expect(tlog).toEqual(['next 3', 'unsub a', 'next 4', 'unsub b']);
+    expect(tlog).toEqual(rlog);
+  });
+  */

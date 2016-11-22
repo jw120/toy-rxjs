@@ -13,19 +13,23 @@ export class Log<T> implements Rx.Observer<T> {
 
   constructor(private done?: () => void) { /* empty */ }
 
+  add(s: string): void {
+    this._log.push(s);
+  }
+
   next(x: T): void {
-    this._log.push(`next ${x}`);
+    this.add(`next ${x}`);
   }
 
   error(e: Error): void {
-    this._log.push(`error ${e.message}`);
+    this.add(`error ${e.message}`);
     if (this.done) {
       this.done();
     }
   }
 
   complete(): void {
-    this._log.push(`complete`);
+    this.add('complete');
     if (this.done) {
       this.done();
     }
