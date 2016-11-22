@@ -1,11 +1,12 @@
 /**
  *
- * Defines a logging observable for use in testing
+ * Defines logging observables for use in testing
  *
  */
 
 import * as Rx from 'rxjs/Rx';
 
+/** Basic logging observer for use with synchronous or asynchronous observables */
 export class Log<T> implements Rx.Observer<T> {
 
   private _log: string[] = [];
@@ -36,17 +37,18 @@ export class Log<T> implements Rx.Observer<T> {
 
 }
 
-interface TimedLogEntry {
+export interface TimedLogEntry {
   time: number;
   value: string;
 }
 
+/** Logging observer that tracks times forevents for use with asynchronous observables */
 export class TimedLog<T> implements Rx.Observer<T> {
 
-  private _log: TimedLogEntry[] = [];
-  private start: number;
+  _log: TimedLogEntry[] = [];
+  start: number;
 
-  constructor(private done?: () => void) {
+  constructor(private done: () => void) {
     this.start = Date.now();
   }
 
@@ -68,20 +70,17 @@ export class TimedLog<T> implements Rx.Observer<T> {
     }
   }
 
-  isCloseTo(times: number[], values: string[], tolerance: [number, number]): boolean {
-    if (times.length !== values.length) {
-      throw Error('Invalid input to isClose to (mismatched lengths)');
-    }
-    let val: boolean = this._log.length === times.length &&
-      this._log.every((entry: TimedLogEntry, i: number) => {
-        return entry.time > times[i] + tolerance[0] &&
-          entry.time < times[i] + tolerance[1] &&
-          entry.value === entry.value;
-      });
-    if (!val) {
-      console.log('Failed comparing', this._log, times, values, tolerance);
-    }
-    return val;
-  }
+}
 
+/** Helper function used in compare to construct a TimedLog */
+export function mkTimedLog<T>(times: number[], values: string[]): TimedLog<T> {
+  let t: TimedLog<T> = new TimedLog(null);
+  if (times.length !== values.length) {
+    throw Error('Invalid input to mkTimedLog to (mismatched lengths)');
+  }
+  t._log = times.map((time: number, i: number) => ({
+    time,
+    value: values[i]
+  }));
+  return t;
 }

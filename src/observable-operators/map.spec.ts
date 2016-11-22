@@ -1,7 +1,7 @@
 import * as ToyRx from '../Rx';
 import * as RefRx from 'rxjs/Rx';
 
-import { it2Sync, describe2Async, describe2AsyncClose } from '../test-helpers/compare';
+import { itObs, describeObsAsync, describeObsTimedAsync } from '../test-helpers/compare';
 
 const input: number[] = [1, 9, 8, 4];
 const double: (x: number) => number = (x: number) => x * 2;
@@ -16,31 +16,31 @@ const testMsg: string = 'testErr';
 
 describe('map operator (with synchronous observable)', () => {
 
-  it2Sync('should work with doubling',
+  itObs('should work with doubling',
     ToyRx.Observable.of(...input).map(double),
     RefRx.Observable.of(...input).map(double),
     doubled
   );
 
-  it2Sync('should work with toIndex',
+  itObs('should work with toIndex',
     ToyRx.Observable.of(...input).map(toIndex),
     RefRx.Observable.of(...input).map(toIndex),
     indices
   );
 
-  it2Sync('should work with timesIndex',
+  itObs('should work with timesIndex',
     ToyRx.Observable.of(...input).map(timesIndex),
     RefRx.Observable.of(...input).map(timesIndex),
     timesIndices
   );
 
-  it2Sync('should work with an error',
+  itObs('should work with an error',
     ToyRx.Observable.throw(Error(testMsg)).map(double),
     RefRx.Observable.throw(Error(testMsg)).map(double),
     ['error ' + testMsg]
   );
 
-  it2Sync('should work with nothing',
+  itObs('should work with nothing',
     ToyRx.Observable.never().map(double),
     RefRx.Observable.never().map(double),
     []
@@ -48,17 +48,16 @@ describe('map operator (with synchronous observable)', () => {
 
 });
 
-describe2Async('map operator (with asynchronous observable)', 'should work with tripling',
+describeObsAsync('map operator (with asynchronous observable)', 'should work with tripling',
   ToyRx.Observable.of(...input).map(triple),
   RefRx.Observable.of(...input).map(triple),
   tripled
 );
 
-describe2AsyncClose('map operator (with asynchronous observable)', 'should work with timeout',
+describeObsTimedAsync('map operator (with asynchronous observable)', 'should work with timeout',
   ToyRx.Observable.interval(100).map(toIndex),
   RefRx.Observable.interval(100).map(toIndex),
   [100, 200, 300, 400],
   ['next 0', 'next 1', 'next 2', 'next 3'],
-  [-10, 25],
   450
 );

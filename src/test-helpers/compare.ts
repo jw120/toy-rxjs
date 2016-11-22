@@ -7,7 +7,7 @@
 import * as ToyRx from '../../src/Rx';
 import * as RefRx from 'rxjs/Rx';
 
-import { Log, TimedLog } from './log';
+import { Log, TimedLog, mkTimedLog } from './log';
 
 /** Helper function to convert its arguments into an array of next's plus complete */
 export function completeEmits(...xs: any[]): string[] {
@@ -20,24 +20,25 @@ export function incompleteEmits(...xs: any[]): string[] {
 }
 
 /** Subscribe to given observables synchronously with logging observer and expect both to equal given value */
-export function it2Sync<T>(
+export function itObs<T>(
   itMessage: string,
   toyObs: ToyRx.Observable<T>,
   refObs: RefRx.Observable<T>,
   expectedOutput: string[]
 ): void {
+
   it(itMessage, () => {
     let toyLog: Log<T> = new Log();
     let refLog: Log<T> = new Log();
     toyObs.subscribe(toyLog);
     refObs.subscribe(refLog);
     expect(toyLog.log).toEqual(expectedOutput);
-    expect(toyLog.log).toEqual(refLog.log);
+    expect(refLog.log).toEqual(expectedOutput);
   });
 }
 
 /** Subscribe to given observables asynchronously with logging observer and expect both to equal given value */
-export function describe2Async<T>(
+export function describeObsAsync<T>(
   describeMessage: string,
   itMessage: string,
   toyObs: ToyRx.Observable<T>,
@@ -45,61 +46,78 @@ export function describe2Async<T>(
   expectedOutput: string[],
   timeout?: number
 ): void {
+
   describe(describeMessage, () => {
+
     let toyLog: Log<T>;
     let refLog: Log<T>;
-    beforeEach((done: DoneFn) => {
+
+    it(`ToyRx logging (${itMessage})`, (done: DoneFn) => {
       toyLog = new Log(done);
       const toySub: ToyRx.Subscription = toyObs.subscribe(toyLog);
       if (timeout !== undefined) {
         setTimeout(() => { toySub.unsubscribe(); done(); }, timeout);
       }
     });
-    beforeEach((done: DoneFn) => {
+
+    it(`RefRx logging (${itMessage})`, (done: DoneFn) => {
       refLog = new Log(done);
       const refSub: RefRx.Subscription = refObs.subscribe(refLog);
       if (timeout !== undefined) {
         setTimeout(() => { refSub.unsubscribe(); done(); }, timeout);
       }
     });
-    it(itMessage, () => {
+
+    it(itMessage + ' (ToyRx)', () => {
       expect(toyLog.log).toEqual(expectedOutput);
-      expect(toyLog.log).toEqual(refLog.log);
+    });
+
+    it(itMessage + ' (RefRx)', () => {
+      expect(refLog.log).toEqual(expectedOutput);
     });
   });
 }
 
 /** Subscribe to given observables asynchronously with timed logging observer and expect both to be close given value */
-export function describe2AsyncClose<T>(
+export function describeObsTimedAsync<T>(
   describeMessage: string,
   itMessage: string,
   toyObs: ToyRx.Observable<T>,
   refObs: RefRx.Observable<T>,
   expectedTimes: number[],
   expectedValues: string[],
-  tolerance: [number, number],
   timeout?: number
 ): void {
+
   describe(describeMessage, () => {
+
     let toyLog: TimedLog<T>;
     let refLog: TimedLog<T>;
-    beforeEach((done: DoneFn) => {
+    let expLog: TimedLog<T> = mkTimedLog(expectedTimes, expectedValues);
+
+    it(`ToyRx logging (${itMessage})`, (done: DoneFn) => {
       toyLog = new TimedLog(done);
       const toySub: ToyRx.Subscription = toyObs.subscribe(toyLog);
       if (timeout !== undefined) {
         setTimeout(() => { toySub.unsubscribe(); done(); }, timeout);
       }
     });
-    beforeEach((done: DoneFn) => {
+
+    it(`RefRx logging (${itMessage})`, (done: DoneFn) => {
       refLog = new TimedLog(done);
       const refSub: RefRx.Subscription = refObs.subscribe(refLog);
       if (timeout !== undefined) {
         setTimeout(() => { refSub.unsubscribe(); done(); }, timeout);
       }
     });
-    it(itMessage, () => {
-      expect(toyLog.isCloseTo(expectedTimes, expectedValues, tolerance)).toBe(true);
-      expect(refLog.isCloseTo(expectedTimes, expectedValues, tolerance)).toBe(true);
+
+    it(itMessage + ' (ToyRx)', () => {
+      expect(refLog).toEqual(expLog);
     });
+
+    it(itMessage + ' (RefRx)', () => {
+      expect(toyLog).toEqual(expLog);
+    });
+
   });
 }
