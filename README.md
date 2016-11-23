@@ -18,7 +18,8 @@ the expected result and with the result from running with the full Rxjs library.
 
 ## TODO
 
-* concat
+* concat - upgrade code and work out tests
+* add asserrtNever to switches
 * support thisArg in map?
 * Add a hot observable
 
@@ -62,26 +63,13 @@ Written and tests freshened
 * create - done
 * empty - done (with async)
 * throw - done
-
-Tests to freshened
-of
-range
-interval
-timer
-map
-take
-interval-take
-concat
-unsubsribe
-
 * of - done
 * interval - done
 * range - done
 * timer - done
+
 * fromPromise - to do, easy
-
 * from - to do, medium (without Scheduler)
-
 
 * bindCallback - to do, easy
 * bindNodeCallback - to do, easy

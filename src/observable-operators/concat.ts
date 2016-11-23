@@ -5,11 +5,55 @@ import { Subscription } from '../Subscription';
 import { subscribe } from './subscribe';
 import { TearDownLogic } from '../utils/TearDownLogic';
 
-// We run through 3 modes: start with the first observable active (with any values from the
-// second going into a queue), then the second observable becomes active, then none are active
-// (this is an object so can be modified when passed as a function argument)
-interface State {
-  state: 'First' | 'Second' | 'None';
+// Second observable runs through a series of modes
+interface QueueState { // (must be an object so can be mutated by the functions it is passed to)
+  state: 'Queue'   // Initially the second subscribe method diverts all events into a queue
+       | 'Dequeue' // When first subscribe completes, second has to use all the events ints a queue
+       | 'Normal'  // After Dequeue, second subscribe runs normally
+       | 'Finish'; // If there is an error in first subscribe we skip the second
+}
+
+export function concat<T>(first: SubscribeFn<T>, second: SubscribeFn<T>): Observable<T> {
+
+  return new Observable<T>((o: Observer<T>): TearDownLogic => {
+
+    // mutable state shared between the two subscribe functions
+    let secondState: QueueState = { state: 'Queue' };
+
+    // hold the subscriptions here so they can be called
+
+    let firstSub: Subscription = Subscription.EMPTY;
+    firstSub = subscribe(first, advanceOnEnd<T>(o, secondState, firstSub));
+    return subscribe(second, addQueue<T>(o, secondState));
+
+  });
+
+}
+
+// Advance the queue state (mutably) on error/complete
+function advanceOnEnd<T>(o: Observer<T>, nextState: QueueState, sub: Subscription): Observer<T> {
+
+  return {
+
+    next: (x: T): void => {
+      o.next(x);
+    },
+
+    error: (e: Error): void => {
+      o.error(e);
+      sub.unsubscribe();
+      if (nextState.state === 'Queue') {
+        nextState.state = 'Finish';
+      }
+    },
+
+    complete: (): void => {
+      sub.unsubscribe();
+      if (nextState.state === 'Queue') {
+        nextState.state = 'Dequeue';
+      }
+    }
+  };
 }
 
 // We store events from the second observable while first is active
@@ -18,81 +62,80 @@ type QueueItem<T>
   | { type: 'Error', value: Error }
   | { type: 'Complete' };
 
-export function concat<T>(first: SubscribeFn<T>, second: SubscribeFn<T>): Observable<T> {
+function addQueue<T>(o: Observer<T>, state: QueueState): Observer<T> {
 
-  return new Observable<T>((o: Observer<T>): TearDownLogic => {
+  let queue: Array<QueueItem<T>> = [];
 
-    let state: State = { state: 'First' };
-    let queue: QueueItem<T>[] = [];
-
-    let firstSub: Subscription = subscribe(first, patchFirstObserver<T>(o, state, queue));
-    let secondSub: Subscription = subscribe(second, patchSecondObserver<T>(o, state, queue));
-    return firstSub.add(secondSub);
-
-  });
-
-}
-
-function patchFirstObserver<T>(o: Observer<T>, state: State, queue: QueueItem<T>[]): Observer<T> {
-
-  return {
-
-    // If first still active, just pass on values - otherwise ignore
-    next: (x: T): void => (state.state === 'First') && o.next(x),
-
-    // If first still active, error is passed on and stops
-    error: (e: Error): void => { if (state.state === 'First') { state.state = 'None'; o.error(e); } },
-
-    // If first still active, complete makes second observable active and first empties the queue
-    complete: (): void => {
-      if (state.state === 'First') {
-        state.state = 'Second';
-        queue.forEach((q: QueueItem<T>) => {
-          if (state.state === 'Second') {
-            if (q.type === 'Next') {
-              o.next(q.value);
-            } else if (q.type === 'Error') {
-              o.error(q.value);
-              state.state = 'None';
-            } else if (q.type === 'Complete') {
-              o.complete();
-              state.state = 'None';
-            } else {
-              throw Error('Unknown type in concat dequeuing'); // Should not be possible
-            }
-          }
-        });
+  // Flush all the queue items (don't bother continuing after first error/complete)
+  function flushQueue(): void {
+    let finished: boolean = false;
+    let i: number = 0;
+    while (i < queue.length && !finished) {
+      let q: QueueItem<T> = queue[i];
+      switch (q.type) {
+        case 'Next': o.next(q.value); break;
+        case 'Error': o.error(q.value); finished = true; break;
+        case 'Complete': o.complete(); finished = true; break;
+        default:
+          throw Error('Unknown type in concat dequeuing'); // Should not be possible
       }
     }
-  };
-}
-
-function patchSecondObserver<T>(o: Observer<T>, state: State, queue: QueueItem<T>[]): Observer<T> {
+  }
 
   return {
 
       next: (x: T): void => {
-        if (state.state === 'First') {
-          queue.push({ type: 'Next', value: x });
-        } else if (state.state === 'Second') {
-          o.next(x);
+        switch (state.state) {
+          case 'Queue':
+            queue.push({ type: 'Next', value: x });
+            break;
+          case 'Dequeue':
+            flushQueue();
+            state.state = 'Normal';
+            o.next(x);
+            break;
+          case 'Normal':
+            o.next(x);
+            break;
+          default:
+            break;
         }
       },
-      error: (e: Error): void => {
-        if (state.state === 'First') {
-          queue.push({ type: 'Error', value: e });
-        } else if (state.state === 'Second') {
-          state.state = 'None';
-          o.error(e);
+
+     error: (e: Error): void => {
+        switch (state.state) {
+          case 'Queue':
+            queue.push({ type: 'Error', value: e });
+            break;
+          case 'Dequeue':
+            flushQueue();
+            state.state = 'Normal';
+            o.error(e);
+            break;
+          case 'Normal':
+            o.error(e);
+            break;
+          default:
+            break;
         }
       },
-      complete: (): void => {
-        if (state.state === 'First') {
-          queue.push({ type: 'Complete' });
-        } else if (state.state === 'Second') {
-          state.state = 'None';
-          o.complete();
+
+    complete: (): void => {
+      switch (state.state) {
+          case 'Queue':
+            queue.push({ type: 'Complete'});
+            break;
+          case 'Dequeue':
+            flushQueue();
+            state.state = 'Normal';
+            o.complete();
+            break;
+          case 'Normal':
+            o.complete();
+            break;
+          default:
+            break;
         }
       }
-  };
+  }
 }
