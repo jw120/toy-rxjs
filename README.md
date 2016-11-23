@@ -16,11 +16,10 @@ have the nice marble testing from `RxJs`.
 For all of our tests we compare the result from our toy implementation with
 the expected result and with the result from running with the full Rxjs library.
 
+Other limitations - unsubscribes in concat called in wrong order
+
 ## TODO
 
-* concat
- - can we switch to using subscribe so we get proper termination
- - why does async not work?
 * add asserrtNever to switches
 * support thisArg in map?
 * Add a hot observable

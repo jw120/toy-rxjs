@@ -1,6 +1,6 @@
 "use strict";
 const Observable_1 = require("../Observable");
-// Returns an observable whose values are those of this observable with the project function applied
+/** Returns an observable whose values are those of this observable with the project function applied */
 function map(first, project) {
     let index = 0;
     return new Observable_1.Observable((o) => first({

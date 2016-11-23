@@ -14,7 +14,7 @@ describeObsTimedAsync('Observable.timer operator (asynchronos)', 'should work wi
   ToyRx.Observable.timer(500, 100).take(2),
   RefRx.Observable.timer(500, 100).take(2),
   [500, 600, 600],
-  completeEmits(0, 1, 2)
+  completeEmits(0, 1)
 );
 
 describeObsTimedAsync('Observable.timer operator (asynchronos)', 'should work with a longer period',

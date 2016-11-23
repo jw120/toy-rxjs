@@ -80,7 +80,7 @@ export class TimedLog<T> implements Rx.Observer<T> {
 export function mkTimedLog<T>(times: number[], values: string[]): TimedLog<T> {
   let t: TimedLog<T> = new TimedLog(null);
   if (times.length !== values.length) {
-    throw Error('Invalid input to mkTimedLog to (mismatched lengths)');
+    throw Error(`Invalid input to mkTimedLog to (mismatched lengths): ${times}, ${values}`);
   }
   t._log = times.map((time: number, i: number) => ({
     time,
