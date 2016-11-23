@@ -18,7 +18,9 @@ the expected result and with the result from running with the full Rxjs library.
 
 ## TODO
 
-* concat - upgrade code and work out tests
+* concat
+ - can we switch to using subscribe so we get proper termination
+ - why does async not work?
 * add asserrtNever to switches
 * support thisArg in map?
 * Add a hot observable
