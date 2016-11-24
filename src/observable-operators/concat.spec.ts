@@ -82,7 +82,8 @@ describe('concat operator', () => {
       return () => { log.add('unsub2'); };
     };
   }
-  // LIMITATION - would like test below to work without .sort()
+  // LIMITATION - concat has wrong unsubscribe order
+  // would like test below to work without .sort()
   it('should handle unsubscribes (though perhaps not in order)', () => {
     let toyLog: Log<number> = new Log();
     let refLog: Log<number> = new Log();
@@ -119,18 +120,18 @@ describeObsAsync('concat operator', 'works asynchronously with interval/take',
 );
 
 describeObsTimedAsync('concat operator', 'works asynchronously with interval/take to time (example 1)',
-  ToyRx.Observable.interval(100).take(3)
+  () => ToyRx.Observable.interval(100).take(3)
     .concat(ToyRx.Observable.interval(150).take(2)),
-  RefRx.Observable.interval(100).take(3)
+  () => RefRx.Observable.interval(100).take(3)
     .concat(RefRx.Observable.interval(150).take(2)),
   [100, 200, 300, 450, 600, 600],
   completeEmits(0, 1, 2, 0, 1)
 );
 
 describeObsTimedAsync('concat operator', 'works asynchronously with interval/take to time (example 2)',
-  ToyRx.Observable.interval(100).take(2)
+  () => ToyRx.Observable.interval(100).take(2)
     .concat(ToyRx.Observable.interval(200).take(3)),
-  RefRx.Observable.interval(100).take(2)
+  () => RefRx.Observable.interval(100).take(2)
     .concat(RefRx.Observable.interval(200).take(3)),
   [100, 200, 400, 600, 800, 800],
   completeEmits(0, 1, 0, 1, 2)

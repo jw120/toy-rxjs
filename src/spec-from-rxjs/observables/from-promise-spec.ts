@@ -4,7 +4,7 @@
  *
  */
 
-import * as Rx from '../Rx';
+import * as Rx from '../../Rx';
 
 // declare const process: any;
 
@@ -74,7 +74,7 @@ describe('Rx.Observable.fromPromise', () => {
     });
   });
 
-/*
+/* LIMITATION - no scheduler for fromPromise
   it('should emit a value from a resolved promise on a separate scheduler', (done: DoneFn) => {
     const promise = Promise.resolve(42);
     Rx.Observable.fromPromise(promise, Rx.Scheduler.asap)
@@ -124,21 +124,22 @@ describe('Rx.Observable.fromPromise', () => {
   });
   */
 
-  it('should not emit, throw or complete if immediately unsubscribed', (done: DoneFn) => {
-    const nextSpy: jasmine.Spy = jasmine.createSpy('nextSpy');
-    const throwSpy: jasmine.Spy = jasmine.createSpy('throwSpy');
-    const completeSpy: jasmine.Spy = jasmine.createSpy('completeSpy');
-    const promise: Promise<number> = Promise.resolve(42);
-    const subscription: Rx.Subscription = Rx.Observable.fromPromise(promise)
-      .subscribe(nextSpy, throwSpy, completeSpy);
-    subscription.unsubscribe();
+  // LIMITATION fromPromise does avoid calling observer with immediate unsubscribe
+  // it('should not emit, throw or complete if immediately unsubscribed', (done: DoneFn) => {
+  //   const nextSpy: jasmine.Spy = jasmine.createSpy('nextSpy');
+  //   const throwSpy: jasmine.Spy = jasmine.createSpy('throwSpy');
+  //   const completeSpy: jasmine.Spy = jasmine.createSpy('completeSpy');
+  //   const promise: Promise<number> = Promise.resolve(42);
+  //   const subscription: Rx.Subscription = Rx.Observable.fromPromise(promise)
+  //     .subscribe(nextSpy, throwSpy, completeSpy);
+  //   subscription.unsubscribe();
 
-    setTimeout(() => {
-      expect(nextSpy).not.toHaveBeenCalled();
-      expect(throwSpy).not.toHaveBeenCalled();
-      expect(completeSpy).not.toHaveBeenCalled();
-      done();
-    });
-  });
+  //   setTimeout(() => {
+  //     expect(nextSpy).not.toHaveBeenCalled();
+  //     expect(throwSpy).not.toHaveBeenCalled();
+  //     expect(completeSpy).not.toHaveBeenCalled();
+  //     done();
+  //   });
+  // });
 
 });

@@ -73,8 +73,8 @@ describeObsAsync('Observable.range asynchronous', 'should work',
 );
 
 describeObsTimedAsync('Observable.interval operator (asynchronos)', 'should work with times',
-  ToyRx.Observable.interval(100),
-  RefRx.Observable.interval(100),
+  () => ToyRx.Observable.interval(100),
+  () => RefRx.Observable.interval(100),
   [100, 200, 300],
   incompleteEmits(0, 1, 2),
   350

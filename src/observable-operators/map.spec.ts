@@ -55,8 +55,8 @@ describeObsAsync('map operator (with asynchronous observable)', 'should work wit
 );
 
 describeObsTimedAsync('map operator (with asynchronous observable)', 'should work with timeout',
-  ToyRx.Observable.interval(100).map(toIndex),
-  RefRx.Observable.interval(100).map(toIndex),
+  () => ToyRx.Observable.interval(100).map(toIndex),
+  () => RefRx.Observable.interval(100).map(toIndex),
   [100, 200, 300, 400],
   ['next 0', 'next 1', 'next 2', 'next 3'],
   450

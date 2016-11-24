@@ -2,13 +2,11 @@ import * as ToyRx from '../Rx';
 import * as RefRx from 'rxjs/Rx';
 
 import { itObs, describeObsAsync, describeObsTimedAsync, completeEmits } from '../test-helpers/compare';
-import { TimedLog, mkTimedLog } from '../test-helpers/log';
 
 // Creates a promise that resolves to the given number
 function mkPromise(x: number, delay?: number): Promise<number> {
   return new Promise((resolve: (v: number) => void) => {
-    if (delay) { console.log('setTimeout for delay', x, delay); }
-    setTimeout(() => { console.log('setTimeout returns', x); resolve(x); }, delay || 1);
+    setTimeout(() => resolve(x), delay || 1);
   });
 }
 function mkRejectPromise(e: Error, delay?: number): Promise<number> {
@@ -60,41 +58,9 @@ describeObsAsync('Observable.fromPromise (asynchronous)', 'works with async reje
 //   completeEmits(4)
 // );
 
-// LIMITATION - Our timing is different
-// const p4: Promise<number> = new Promise((resolve: (p: number) => void) => {
-//   console.log('p4 create');
-//   setTimeout(() => { console.log('p4 resolve'); resolve(66); }, 500);
-// });
-describeObsTimedAsync('Observable.fromPromise (asynchronous)', 'works asynchronously to time',
-  ToyRx.Observable.fromPromise(mkPromise(65, 200)),
-  RefRx.Observable.fromPromise(mkPromise(65, 200)),
+describeObsTimedAsync('2Observable.fromPromise (asynchronous)', 'works asynchronously to time',
+  () => ToyRx.Observable.fromPromise(mkPromise(65, 200)),
+  () => RefRx.Observable.fromPromise(mkPromise(65, 200)),
   [200, 200],
   completeEmits(65)
 );
-
- describe('describeMessage', () => {
-
-    let toyLog: TimedLog<number>;
-    let refLog: TimedLog<number>;
-    let expLog: TimedLog<number> = mkTimedLog([200, 200], ['next 66', 'complete']);
-
-    it(`ToyRx logging (itMessage)`, (done: DoneFn) => {
-      toyLog = new TimedLog(done);
-      ToyRx.Observable.fromPromise(mkPromise(66, 200)).subscribe(toyLog);
-    });
-
-    it('(ToyRx)', () => {
-      expect(toyLog).toEqual(expLog);
-    });
-
-    it(`RefRx logging (itMessage`, (done: DoneFn) => {
-      refLog = new TimedLog(done);
-      RefRx.Observable.fromPromise(mkPromise(66, 200)).subscribe(refLog);
-    });
-
-    it('(RefRx)', () => {
-      console.log('explicit version', refLog._log);
-      expect(refLog).toEqual(expLog);
-    });
-
-  });

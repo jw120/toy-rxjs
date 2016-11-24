@@ -18,16 +18,16 @@ the expected result and with the result from running with the full Rxjs library.
 
 Other limitations (see tests labelled 'LIMITATION')
 * Unsubscribes in concat called in wrong order
-* Timing of fromPromise is wrong
+* fromPromise does not support unsubscribing before resolution
+
 
 ## TODO
 
-* convert async testing to take a closure
-* close out fromPromise - update limitations
 * use other rxjs tests? different directory?
-
-* support thisArg in map?
 * Add a hot observable
+
+* why does fromPromise do nothing for the simple sync cases?
+* support thisArg in map?
 
 Tests
 
@@ -50,16 +50,16 @@ Tests
 Written and tests freshened
 * never (scheduler n/a) - done
 
-* create - done
-* empty - done (with async)
-* throw - done
-* of - done
-* interval - done
-* range - done
-* timer - done
+* create - done (scheduler n/a)
+* empty - done (sync and async)
+* throw - done (sync only)
+* of - done (sync and async)
+* interval - done (sync and async- async is default)
+* range - done (sync and async)
+* timer - done (async only)
+* fromPromise - done
 
-* fromPromise - to do
-* fromPromise - async?
+
 * from - to do, medium (without Scheduler)
 
 * bindCallback - to do, easy

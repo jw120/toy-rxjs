@@ -1,7 +1,7 @@
 import * as ToyRx from '../Rx';
 import * as RefRx from 'rxjs/Rx';
 
-import { TimedLog, mkTimedLog } from '../test-helpers/log';
+import { TimedLog, mkTimedLog } from '../test-helpers/timedLog';
 
 describe('Observable.timer operator (asynchronous)', () => {
 

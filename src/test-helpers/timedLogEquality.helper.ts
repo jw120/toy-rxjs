@@ -5,7 +5,7 @@
  *
  */
 
-import { TimedLog, TimedLogEntry } from './log';
+import { TimedLog, TimedLogEntry } from './timedLog';
 
 /** Tolerance allowed for timings across our tests (milliseconds) */
 const specTolerance: [number, number] = [-50, 50];
