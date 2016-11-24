@@ -103,6 +103,10 @@ export function describeObsTimedAsync<T>(
       }
     });
 
+    it(itMessage + ' (ToyRx)', () => {
+      expect(toyLog).toEqual(expLog);
+    });
+
     it(`RefRx logging (${itMessage})`, (done: DoneFn) => {
       refLog = new TimedLog(done);
       const refSub: RefRx.Subscription = refObs.subscribe(refLog);
@@ -111,12 +115,8 @@ export function describeObsTimedAsync<T>(
       }
     });
 
-    it(itMessage + ' (ToyRx)', () => {
-      expect(refLog).toEqual(expLog);
-    });
-
     it(itMessage + ' (RefRx)', () => {
-      expect(toyLog).toEqual(expLog);
+      expect(refLog).toEqual(expLog);
     });
 
   });

@@ -8,7 +8,7 @@
 import { TimedLog, TimedLogEntry } from './log';
 
 /** Tolerance allowed for timings across our tests (milliseconds) */
-const specTolerance: [number, number] = [-10, 50];
+const specTolerance: [number, number] = [-50, 50];
 
 beforeEach(() => {
   jasmine.addCustomEqualityTester(timedLogEquality);

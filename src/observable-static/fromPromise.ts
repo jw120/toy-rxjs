@@ -7,12 +7,14 @@
 import { Observable } from '../Observable';
 import { Observer } from '../Observer';
 
-// Observable from a Promise
+/**  Creates an Observable from an unresolved promise that passes next and complete on resolution and
+ * passes errror on rejecting with an Error
+ */
 export function fromPromise<T>(p: Promise<T>): Observable<T> {
   return Observable.create((o: Observer<T>): void => {
-    p.then(
-      (x: T) => { o.next(x); o.complete(); },
-      (e: Error) => { o.error(e); }
-    );
+    p.then((v: T) => {
+      o.next(v);
+      o.complete();
+    }).catch(o.error);
   });
 }

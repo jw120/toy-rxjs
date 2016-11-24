@@ -16,38 +16,27 @@ have the nice marble testing from `RxJs`.
 For all of our tests we compare the result from our toy implementation with
 the expected result and with the result from running with the full Rxjs library.
 
-Other limitations - unsubscribes in concat called in wrong order
+Other limitations (see tests labelled 'LIMITATION')
+* Unsubscribes in concat called in wrong order
+* Timing of fromPromise is wrong
 
 ## TODO
 
-* add asserrtNever to switches
+* convert async testing to take a closure
+* close out fromPromise - update limitations
+* use other rxjs tests? different directory?
+
 * support thisArg in map?
 * Add a hot observable
 
-Either
- * Seems like tno - Can we do Scheuler null/async and testscheduler keeping a function as the main driver.
-    Can we make a helper function to turn a synchronous? How does ngrx schedule a raw create() function?
-  * Or implement the operators we use in ng code
-Maybe have an Async parameter? (boolean or global constant) and write our own expectObservable
-What are hot vs cold?
-Simplification - only cold
-Simplicication - limited scheduling
-
-expectObervable
-x -> value (we implement against an array?)
-| -> complete
-- -> time??
-^
-!
-
 Tests
 
-* Check concat calls teardowns properly in async case
 * Check take handles excess complete/errors
 * Use rxjs tests
 * Rethink time stamps test
 
 * Add JSDoc? or at least more comments
+* what is the right word to use? emit? message?
 
 * timer
 * flatMap/concatMap
@@ -69,7 +58,8 @@ Written and tests freshened
 * range - done
 * timer - done
 
-* fromPromise - to do, easy
+* fromPromise - to do
+* fromPromise - async?
 * from - to do, medium (without Scheduler)
 
 * bindCallback - to do, easy

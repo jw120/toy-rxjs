@@ -1,9 +1,11 @@
 import { Observer } from './Observer';
 import { Subscription } from './Subscription';
-import { staticThrow } from './observable-static/throw';
-import { timer } from './observable-static/timer';
+
 import { empty, interval, of, range } from './observable-static/iterator';
 import { never } from './observable-static/never';
+import { fromPromise } from './observable-static/fromPromise';
+import { staticThrow } from './observable-static/throw';
+import { timer } from './observable-static/timer';
 
 import { concat } from './observable-operators/concat';
 import { map } from './observable-operators/map';
@@ -40,12 +42,16 @@ export class Observable<T> {
     return of(...args);
   }
 
-  static throw<T>(e: Error, scheduler?: Scheduler): Observable<T> {
-    return staticThrow(e, scheduler);
-  }
-
   static empty<T>(scheduler?: Scheduler): Observable<T> {
     return empty(scheduler);
+  }
+
+  static fromPromise<T>(promise: Promise<T>): Observable<T> {
+    return fromPromise(promise);
+  }
+
+  static interval(period: number, scheduler?: Scheduler): Observable<number> {
+    return interval(period, scheduler);
   }
 
   static never<T>(): Observable<T> {
@@ -56,12 +62,11 @@ export class Observable<T> {
     return range(start, count, scheduler);
   }
 
-  static interval(period: number, scheduler?: Scheduler): Observable<number> {
-    return interval(period, scheduler);
-  }
-
   static timer(delay: number | Date, period?: number): Observable<number> {
     return timer(delay, period);
+  }
+  static throw<T>(e: Error, scheduler?: Scheduler): Observable<T> {
+    return staticThrow(e, scheduler);
   }
 
   // operators pulled in from observable-operators (where they are defined as functions on SubscribeFns)

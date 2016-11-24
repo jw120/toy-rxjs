@@ -82,6 +82,7 @@ describe('concat operator', () => {
       return () => { log.add('unsub2'); };
     };
   }
+  // LIMITATION - would like test below to work without .sort()
   it('should handle unsubscribes (though perhaps not in order)', () => {
     let toyLog: Log<number> = new Log();
     let refLog: Log<number> = new Log();
