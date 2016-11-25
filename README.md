@@ -23,11 +23,13 @@ Other limitations (see tests labelled 'LIMITATION')
 
 ## TODO
 
-* use other rxjs tests? different directory?
+* tests for from
+* add let
+
 * Add a hot observable
 
 * why does fromPromise do nothing for the simple sync cases?
-* support thisArg in map?
+* support thisArg in map and filter?
 
 Tests
 
@@ -38,10 +40,15 @@ Tests
 * Add JSDoc? or at least more comments
 * what is the right word to use? emit? message?
 
-* timer
 * flatMap/concatMap
 * switchMap
 * combineLatest?
+
+* Can we make a cold (and hot) factory?
+  factory = mkCold
+  cold(factory, '...')
+  cold(factory, '...')
+
 
 ## Operators
 
@@ -74,6 +81,16 @@ Written and tests freshened
 
 * ajax -
 * generate - ?
+
+* buffer - interesting
+* concatMap
+* scan
+* switchMap
+* pairwise
+* partition
+* delay
+* debounceTime
+* first
 
 Later
 * Scheduler

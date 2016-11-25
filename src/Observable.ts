@@ -3,11 +3,13 @@ import { Subscription } from './Subscription';
 
 import { empty, interval, of, range } from './observable-static/iterator';
 import { never } from './observable-static/never';
+import { from } from './observable-static/from';
 import { fromPromise } from './observable-static/fromPromise';
 import { staticThrow } from './observable-static/throw';
 import { timer } from './observable-static/timer';
 
 import { concat } from './observable-operators/concat';
+import { filter } from './observable-operators/filter';
 import { map } from './observable-operators/map';
 import { subscribe } from './observable-operators/subscribe';
 import { take } from './observable-operators/take';
@@ -30,7 +32,9 @@ export class Observable<T> {
     this._subscribe = sub;
   }
 
+  //
   // Static methods pulled in from observable-static
+  //
 
   static create<T>(createFn: SubscribeFn<T>): Observable<T> {
     return new Observable(createFn);
@@ -44,6 +48,14 @@ export class Observable<T> {
 
   static empty<T>(scheduler?: Scheduler): Observable<T> {
     return empty(scheduler);
+  }
+
+  static from<T>(x: Iterable<T>, scheduler?: Scheduler): Observable<T>;
+  static from<T>(x: Iterator<T>, scheduler?: Scheduler): Observable<T>;
+  static from<T>(x: Promise<T>, scheduler?: Scheduler): Observable<T>;
+  static from(x: string, scheduler?: Scheduler): Observable<string>;
+  static from(x: any, scheduler?: Scheduler): any {
+    return from(x, scheduler);
   }
 
   static fromPromise<T>(promise: Promise<T>): Observable<T> {
@@ -69,10 +81,25 @@ export class Observable<T> {
     return staticThrow(e, scheduler);
   }
 
-  // operators pulled in from observable-operators (where they are defined as functions on SubscribeFns)
-  map<U>(project: (x: T, i: number) => U): Observable<U> { return map(this._subscribe, project); }
-  concat(o: Observable<T>): Observable<T> { return concat(this._subscribe, o._subscribe); }
-  take(n: number): Observable<T> { return take(this._subscribe, n); }
+  //
+  // Operators pulled in from observable-operators (where they are defined as functions on SubscribeFns)
+  //
+
+  concat(o: Observable<T>): Observable<T> {
+    return concat(this._subscribe, o._subscribe);
+  }
+
+  filter(predicate: (x: T) => boolean): Observable<T> {
+    return filter(this._subscribe, predicate);
+  }
+
+  map<U>(project: (x: T, i: number) => U): Observable<U> {
+    return map(this._subscribe, project);
+  }
+
+  take(n: number): Observable<T> {
+    return take(this._subscribe, n);
+  }
 
   // Subscribe method - needs to handle function form as well as observable
   subscribe(o: Observer<T>): Subscription;
