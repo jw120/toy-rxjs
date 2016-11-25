@@ -19,12 +19,11 @@ the expected result and with the result from running with the full Rxjs library.
 Other limitations (see tests labelled 'LIMITATION')
 * Unsubscribes in concat called in wrong order
 * fromPromise does not support unsubscribing before resolution
-
+* cannot double call (multicast) observables like range made with fromIterator
 
 ## TODO
 
 * tests for from
-* add let
 
 * Add a hot observable
 
@@ -34,8 +33,6 @@ Other limitations (see tests labelled 'LIMITATION')
 Tests
 
 * Check take handles excess complete/errors
-* Use rxjs tests
-* Rethink time stamps test
 
 * Add JSDoc? or at least more comments
 * what is the right word to use? emit? message?
@@ -43,11 +40,6 @@ Tests
 * flatMap/concatMap
 * switchMap
 * combineLatest?
-
-* Can we make a cold (and hot) factory?
-  factory = mkCold
-  cold(factory, '...')
-  cold(factory, '...')
 
 
 ## Operators

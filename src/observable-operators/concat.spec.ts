@@ -103,6 +103,35 @@ describe('concat operator', () => {
 
 });
 
+describe('concat operator', () => {
+
+  // LIMITATION: Cannot replay observables made with fromIterator
+  // const o1: ToyRx.Observable<number> = ToyRx.Observable.range(1, 3);
+  // const o2: RefRx.Observable<number> = RefRx.Observable.range(1, 3);
+  // itObs('should work with itself with range',
+  //   o1.concat(o1),
+  //   o2.concat(o2),
+  //   completeEmits(1, 2, 3, 1, 2, 3)
+  // );
+
+  const o3: ToyRx.Observable<number> = ToyRx.Observable.create((o: ToyRx.Observer<number>): void => {
+    o.next(1);
+    o.next(2);
+    o.complete();
+  });
+  const o4: RefRx.Observable<number> = RefRx.Observable.create((o: RefRx.Observer<number>): void => {
+    o.next(1);
+    o.next(2);
+    o.complete();
+  });
+  itObs('should work with itself with create',
+    o3.concat(o3),
+    o4.concat(o4),
+    completeEmits(1, 2, 1, 2)
+  );
+
+});
+
 describeObsAsync('concat operator', 'works asynchronously',
   ToyRx.Observable.of(1, 2, 3, ToyRx.Scheduler.async)
     .concat(ToyRx.Observable.of(4, 5, ToyRx.Scheduler.async)),

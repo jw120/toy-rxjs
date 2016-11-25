@@ -101,6 +101,15 @@ export class Observable<T> {
     return take(this._subscribe, n);
   }
 
+  //
+  // Methods defined here
+  //
+
+  /** Returns an observable which is the result of applying the given function to this observable */
+  let<U>(fn: (obs: Observable<T>) => Observable<U>): Observable<U> {
+    return fn(this);
+  }
+
   // Subscribe method - needs to handle function form as well as observable
   subscribe(o: Observer<T>): Subscription;
   subscribe(nextFn: (x: T) => void, errorFn?: (e: Error) => void, completeFn?: () => void): Subscription;
