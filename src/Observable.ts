@@ -50,11 +50,12 @@ export class Observable<T> {
     return empty(scheduler);
   }
 
+  static from<T>(x: Observable<T>, scheduler?: Scheduler): Observable<T>;
+  static from<T>(x: Promise<T>, scheduler?: Scheduler): Observable<T>;
   static from<T>(x: Iterable<T>, scheduler?: Scheduler): Observable<T>;
   static from<T>(x: Iterator<T>, scheduler?: Scheduler): Observable<T>;
-  static from<T>(x: Promise<T>, scheduler?: Scheduler): Observable<T>;
-  static from(x: string, scheduler?: Scheduler): Observable<string>;
-  static from(x: any, scheduler?: Scheduler): any {
+  static from<T>(x: string, scheduler?: Scheduler): Observable<string>;
+  static from<T>(x: any, scheduler?: Scheduler): any {
     return from(x, scheduler);
   }
 
@@ -112,14 +113,16 @@ export class Observable<T> {
 
   // Subscribe method - needs to handle function form as well as observable
   subscribe(o: Observer<T>): Subscription;
-  subscribe(nextFn: (x: T) => void, errorFn?: (e: Error) => void, completeFn?: () => void): Subscription;
-  subscribe(a: ((x: T) => void)| Observer<T>, errorFn?: (e: Error) => void, completeFn?: () => void): Subscription {
+  subscribe(nextFn?: (x: T) => void, errorFn?: (e: Error) => void, completeFn?: () => void): Subscription;
+  subscribe(
+    a: ((x: T) => void)| Observer<T> | undefined,
+    errorFn?: (e: Error) => void,
+    completeFn?: () => void): Subscription {
     return subscribe(this._subscribe, (typeof a === 'object') ? a : {
-        next: a,
+        next: a || ((): void => { /* nothing */ }),
         error: errorFn || ((): void => { /* nothing */ }),
         complete: completeFn || ((): void => { /* nothing */ })
     });
-
   }
 
 }

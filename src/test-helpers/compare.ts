@@ -140,3 +140,8 @@ export function describeObsTimedAsync<T>(
 
   });
 }
+
+/** does nothing. Exists as a wrapper around an arrow function to allow a test where TypeScript just type checks */
+export function typeCheckOnly(_fn: () => void): void {
+  /* empty */
+}

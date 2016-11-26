@@ -23,8 +23,6 @@ Other limitations (see tests labelled 'LIMITATION')
 
 ## TODO
 
-* tests for from
-
 * Add a hot observable
 
 * why does fromPromise do nothing for the simple sync cases?
