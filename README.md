@@ -20,9 +20,12 @@ Other limitations (see tests labelled 'LIMITATION')
 * Unsubscribes in concat called in wrong order
 * fromPromise does not support unsubscribing before resolution
 * cannot double call (multicast) observables like range made with fromIterator
+* Improper types for higher-order operators (concat)
 
 ## TODO
 
+* concatAll: Handle errors, async?
+* then concatMap
 * Add a hot observable
 
 * why does fromPromise do nothing for the simple sync cases?
@@ -55,22 +58,17 @@ Written and tests freshened
 * range - done (sync and async)
 * timer - done (async only)
 * fromPromise - done
+* from - done (only some types support Scheduler)
 
-
-* from - to do, medium (without Scheduler)
 
 * bindCallback - to do, easy
 * bindNodeCallback - to do, easy
-
 * defer - to do, medium
 * fromEvent - to do, medium
 * fromEventPattern - to do, medium
 
 * repeat - needs Scheduler
 * repeatWhen - needs Scheduler
-
-* ajax -
-* generate - ?
 
 * buffer - interesting
 * concatMap

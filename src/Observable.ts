@@ -9,6 +9,7 @@ import { staticThrow } from './observable-static/throw';
 import { timer } from './observable-static/timer';
 
 import { concat } from './observable-operators/concat';
+import { concatAll } from './observable-operators/concatAll';
 import { filter } from './observable-operators/filter';
 import { map } from './observable-operators/map';
 import { subscribe } from './observable-operators/subscribe';
@@ -23,13 +24,17 @@ export interface Subscription {
 
 export type SubscribeFn<T> = (o: Observer<T>) => TearDownLogic;
 
+interface Operator<T, R> {
+
+}
+
 export class Observable<T> {
 
   // Observable implementation centred on its subscribe function
-  private _subscribe: SubscribeFn<T>;
+  public _subscribe: SubscribeFn<T>;
 
-  constructor(sub: SubscribeFn<T>) {
-    this._subscribe = sub;
+  constructor(sub?: SubscribeFn<T>) {
+    this._subscribe = sub || ((): void => { /* nothing */ });
   }
 
   //
@@ -88,6 +93,11 @@ export class Observable<T> {
 
   concat(o: Observable<T>): Observable<T> {
     return concat(this._subscribe, o._subscribe);
+  }
+
+  // LIMITATION: Cannot seem to express this type: should take Observable<Observable<T>> to an Observable<T>
+  concatAll<U>(): Observable<U> {
+    return concatAll(this._subscribe as any);
   }
 
   filter(predicate: (x: T) => boolean): Observable<T> {
