@@ -15,6 +15,11 @@ export function completeEmits(...xs: any[]): string[] {
   return incompleteEmits(...xs).concat('complete');
 }
 
+/** Helper function to convert its arguments into an array of next's finishing with an error */
+export function errorEmits(errorMessage: string, ...xs: any[]): string[] {
+  return incompleteEmits(...xs).concat('error ' + errorMessage);
+}
+
 /** Helper function to convert its arguments into an array of next's */
 export function incompleteEmits(...xs: any[]): string[] {
   return xs.map((x: any) => 'next ' + x.toString());

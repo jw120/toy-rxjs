@@ -24,7 +24,7 @@ Other limitations (see tests labelled 'LIMITATION')
 
 ## TODO
 
-* concatAll: Handle errors, async?
+* concatAll: async
 * then concatMap
 * Add a hot observable
 
