@@ -9,7 +9,7 @@ import * as Rx from 'rxjs/Rx';
 /** Basic logging observer for use with synchronous or asynchronous observables */
 export class Log<T> implements Rx.Observer<T> {
 
-  private _log: string[] = [];
+  private _log: Array<string> = [];
 
   constructor(private done?: () => void) { /* empty */ }
 
@@ -35,7 +35,7 @@ export class Log<T> implements Rx.Observer<T> {
     }
   }
 
-  get log(): string[] {
+  get log(): Array<string> {
     return this._log;
   }
 

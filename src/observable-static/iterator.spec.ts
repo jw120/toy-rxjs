@@ -6,7 +6,7 @@ import { completeEmits, incompleteEmits,
 
 describe('Observable.of synchronous', () => {
 
-  const testArgs: number[] = [1, 3, 2, 7];
+  const testArgs: Array<number> = [1, 3, 2, 7];
 
   itObs('should work with no scheduler specified',
     ToyRx.Observable.of(...testArgs),

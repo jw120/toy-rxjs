@@ -9,8 +9,8 @@ import { Log } from '../test-helpers/log';
 
 describe('concat operator', () => {
 
-  const xs: number[] = [1, 2, 3];
-  const ys: number[] = [4, 5];
+  const xs: Array<number> = [1, 2, 3];
+  const ys: Array<number> = [4, 5];
   itObs('should work with regular synchronous observables',
     ToyRx.Observable.of(...xs).concat(ToyRx.Observable.of(...ys)),
     RefRx.Observable.of(...xs).concat(RefRx.Observable.of(...ys)),

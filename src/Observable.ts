@@ -47,7 +47,7 @@ export class Observable<T> {
 
   // If TypeScript allowed, type whould be:
   // static of(...args: T[], scheduler?: Scheduler )
-  static of<T>(...args: any[]): Observable<T> {
+  static of<T>(...args: Array<any>): Observable<T> {
     return of(...args);
   }
 

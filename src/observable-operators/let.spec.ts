@@ -5,11 +5,11 @@ import {
   completeEmits, incompleteEmits, itObs, describeObsAsync, describeObsTimedAsync
 } from '../test-helpers/compare';
 
-const input: number[] = [1, 9, 8, 4];
+const input: Array<number> = [1, 9, 8, 4];
 function double(x: number): number { return x * 2; }
 function toyDoubleMap(o: ToyRx.Observable<number>): ToyRx.Observable<number> { return o.map(double); }
 function refDoubleMap(o: RefRx.Observable<number>): RefRx.Observable<number> { return o.map(double); }
-const doubled: string[] = completeEmits(2, 18, 16, 8);
+const doubled: Array<string> = completeEmits(2, 18, 16, 8);
 function toySelfTake(o: ToyRx.Observable<number>): ToyRx.Observable<number> { return o.take(2); }
 function refSelfTake(o: RefRx.Observable<number>): RefRx.Observable<number> { return o.take(2); }
 

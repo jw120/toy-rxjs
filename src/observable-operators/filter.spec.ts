@@ -6,7 +6,7 @@ import {
   itObs, describeObsAsync, describeObsTimedAsync
 } from '../test-helpers/compare';
 
-const input: number[] = [1, 9, 8, 6];
+const input: Array<number> = [1, 9, 8, 6];
 const isEven: (x: number) => boolean = (x: number) => x % 2 === 0;
 const isMult3: (x: number) => boolean = (x: number) => x % 3 === 0;
 const testMsg: string = 'tst';

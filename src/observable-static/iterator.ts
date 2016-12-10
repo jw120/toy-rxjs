@@ -46,7 +46,7 @@ export function fromIterable<T>(iterable: Iterable<T>, period: number, scheduler
 }
 
 /** Creates an Observable that emits the arguments provided (the last of which may be a Scheduler) */
-export function of<T>(...args: T[]): Observable<T> {
+export function of<T>(...args: Array<T>): Observable<T> {
   if (args.length > 0) {
     let possibleScheduler: T | Scheduler = args[args.length - 1];
     if (isScheduler(possibleScheduler)) {

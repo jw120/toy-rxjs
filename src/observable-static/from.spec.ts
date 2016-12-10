@@ -22,7 +22,7 @@ describe('Observable.from', () => {
   it('should return T for ObservableLike objects', () => {
     typeCheckOnly(() => {
       /* tslint:disable:no-unused-variable */
-      let t1: ToyRx.Observable<number> = ToyRx.Observable.from(<number[]> [], ToyRx.Scheduler.async);
+      let t1: ToyRx.Observable<number> = ToyRx.Observable.from(<Array<number>> [], ToyRx.Scheduler.async);
       let t2: ToyRx.Observable<{ a: string }> = ToyRx.Observable.from(ToyRx.Observable.empty<{ a: string}>());
       let t3: ToyRx.Observable<{ b: number }> =
         ToyRx.Observable.from(new Promise<{b: number}>((resolve: Function) => resolve()));
@@ -33,8 +33,8 @@ describe('Observable.from', () => {
   it('should return T for arrays', () => {
     typeCheckOnly(() => {
       /* tslint:disable:no-unused-variable */
-      let t1: ToyRx.Observable<number> = ToyRx.Observable.from(<number[]> [], ToyRx.Scheduler.async);
-      let r1: ToyRx.Observable<number> = ToyRx.Observable.from(<number[]> [], ToyRx.Scheduler.async);
+      let t1: ToyRx.Observable<number> = ToyRx.Observable.from(<Array<number>> [], ToyRx.Scheduler.async);
+      let r1: ToyRx.Observable<number> = ToyRx.Observable.from(<Array<number>> [], ToyRx.Scheduler.async);
       /* tslint:enable:no-unused-variable */
     });
   });
@@ -51,9 +51,9 @@ describe('Observable.from', () => {
   //   })
   // });
 
-  const fakerator: any = (...values: any[]) => ({
+  const fakerator: any = (...values: Array<any>) => ({
     [<symbol> Symbol.iterator]: () => {
-      const clone: any[] = [...values];
+      const clone: Array<any> = [...values];
       return {
         next: () => ({
           done: clone.length <= 0,
@@ -63,7 +63,7 @@ describe('Observable.from', () => {
     }
   });
 
-  const sources: { name: string, value: any }[] = [
+  const sources: Array<{ name: string, value: any }> = [
     { name: 'observable', value: ToyRx.Observable.of('x') },
 //    { name: 'observable-like', value: fakervable('x') },
     { name: 'array', value: ['x'] },

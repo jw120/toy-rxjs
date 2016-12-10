@@ -11,17 +11,17 @@ import { Log } from './log';
 import { TimedLog, mkTimedLog } from './timedLog';
 
 /** Helper function to convert its arguments into an array of next's plus complete */
-export function completeEmits(...xs: any[]): string[] {
+export function completeEmits(...xs: Array<any>): Array<string> {
   return incompleteEmits(...xs).concat('complete');
 }
 
 /** Helper function to convert its arguments into an array of next's finishing with an error */
-export function errorEmits(errorMessage: string, ...xs: any[]): string[] {
+export function errorEmits(errorMessage: string, ...xs: Array<any>): Array<string> {
   return incompleteEmits(...xs).concat('error ' + errorMessage);
 }
 
 /** Helper function to convert its arguments into an array of next's */
-export function incompleteEmits(...xs: any[]): string[] {
+export function incompleteEmits(...xs: Array<any>): Array<string> {
   return xs.map((x: any) => 'next ' + x.toString());
 }
 
@@ -30,7 +30,7 @@ export function itObs<T>(
   itMessage: string,
   toyObs: ToyRx.Observable<T>,
   refObs: RefRx.Observable<T>,
-  expectedOutput: string[]
+  expectedOutput: Array<string>
 ): void {
 
   it(itMessage, () => {
@@ -48,7 +48,7 @@ export function itObsHold<T>(
   itMessage: string,
   toyObsFn: () => ToyRx.Observable<T>,
   refObsFn: () => RefRx.Observable<T>,
-  expectedOutput: string[]
+  expectedOutput: Array<string>
 ): void {
 
   it(itMessage, () => {
@@ -67,7 +67,7 @@ export function describeObsAsync<T>(
   itMessage: string,
   toyObs: ToyRx.Observable<T>,
   refObs: RefRx.Observable<T>,
-  expectedOutput: string[],
+  expectedOutput: Array<string>,
   timeout?: number
 ): void {
 
@@ -108,8 +108,8 @@ export function describeObsTimedAsync<T>(
   itMessage: string,
   toyObsFn: () => ToyRx.Observable<T>, // we pass a function to delay execution, so timing works better
   refObsFn: () => RefRx.Observable<T>,
-  expectedTimes: number[],
-  expectedValues: string[],
+  expectedTimes: Array<number>,
+  expectedValues: Array<string>,
   timeout?: number
 ): void {
 
