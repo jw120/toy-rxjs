@@ -10,6 +10,7 @@ import { timer } from './observable-static/timer';
 
 import { concat } from './observable-operators/concat';
 import { concatAll } from './observable-operators/concatAll';
+import { concatMap, concatMapSimple } from './observable-operators/concatMap';
 import { filter } from './observable-operators/filter';
 import { map } from './observable-operators/map';
 import { subscribe } from './observable-operators/subscribe';
@@ -98,6 +99,17 @@ export class Observable<T> {
   // LIMITATION: Cannot seem to express this type: should take Observable<Observable<T>> to an Observable<T>
   concatAll<U>(): Observable<U> {
     return concatAll(this._subscribe as any);
+  }
+
+  concatMapSimple<V>(
+    project: (x: T, i: number) => Observable<V>): Observable<V> {
+    return concatMapSimple(this._subscribe, project);
+  }
+
+  concatMap<U, V>(
+    project: (x: T, i: number) => Observable<U>,
+    resultSelector?: (x: T, y: U, i: number, j: number) => V): Observable<V> {
+    return concatMap(this._subscribe, project, resultSelector);
   }
 
   filter(predicate: (x: T) => boolean): Observable<T> {

@@ -25,7 +25,7 @@ Other limitations (see tests labelled 'LIMITATION')
 
 ## TODO
 
-* concatMap
+* Check what my angular code is using
 
 * why does fromPromise do nothing for the simple sync cases?
 * support thisArg in map and filter?
@@ -37,7 +37,6 @@ Tests
 * Add JSDoc? or at least more comments
 * what is the right word to use? emit? message?
 
-* flatMap/concatMap
 * switchMap
 * combineLatest?
 
