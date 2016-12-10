@@ -2,10 +2,10 @@ import { Observable, SubscribeFn } from '../Observable';
 import { Observer } from '../Observer';
 import { TearDownLogic } from '../utils/TearDownLogic';
 
-export function concatMapSimple<T, U>(
+export function concatMapSimple<T, U, V>(
   first: SubscribeFn<T>,
   project: (x: T, i: number) => Observable<U>
-  ): Observable<U> {
+  ): Observable<V> {
 
   return (new Observable(first))
     .map(project)
@@ -13,11 +13,11 @@ export function concatMapSimple<T, U>(
 
 }
 
-export function concatMap<T, U, V>(
+export function concatMapFull<T, U, V>(
   first: SubscribeFn<T>,
   project: (x: T, i: number) => Observable<U>,
   resultSelector?: (outerVal: T, innerVal: U, outerIndex: number, innerIndex: number) => V
-  ): Observable<V> {
+): Observable<V> {
 
   interface Result {
     outerVal: T;

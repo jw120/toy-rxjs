@@ -16,7 +16,7 @@ describe('concatMap operator (synchronous)', () => {
 
   const in1: Array<number> = [ 1, 3, 2];
   itObs('should work with complete observables',
-    ToyRx.Observable.from(in1).concatMapSimple((x: number) => ToyRx.Observable.from(letterMap(x))),
+    ToyRx.Observable.from(in1).concatMap((x: number) => ToyRx.Observable.from(letterMap(x))),
     RefRx.Observable.from(in1).concatMap((x: number) => RefRx.Observable.from(letterMap(x))),
     completeEmits('a', 'c', 'c', 'c', 'b', 'b')
   );
@@ -32,7 +32,7 @@ describe('concatMap operator (synchronous)', () => {
 const in2: Array<number> = [ 2, 1, 3];
 describeObsAsync('concatMap operator (synchronous of asynchronous)', 'should work',
   ToyRx.Observable.from(in2)
-    .concatMapSimple((x: number) => ToyRx.Observable.from(letterMap(x), ToyRx.Scheduler.async)),
+    .concatMap((x: number) => ToyRx.Observable.from(letterMap(x), ToyRx.Scheduler.async)),
   RefRx.Observable.from(in2)
     .concatMap((x: number) => RefRx.Observable.from(letterMap(x), RefRx.Scheduler.async)),
   completeEmits('b', 'b', 'a', 'c', 'c', 'c')
@@ -41,7 +41,7 @@ describeObsAsync('concatMap operator (synchronous of asynchronous)', 'should wor
 const in3: Array<number> = [ 1, 2, 3];
 describeObsAsync('concatMap operator (asynchronous of asynchronous)', 'should work',
   ToyRx.Observable.from(in3, ToyRx.Scheduler.async)
-    .concatMapSimple((x: number) => ToyRx.Observable.from(letterMap(x), ToyRx.Scheduler.async)),
+    .concatMap((x: number) => ToyRx.Observable.from(letterMap(x), ToyRx.Scheduler.async)),
   RefRx.Observable.from(in3, RefRx.Scheduler.async)
     .concatMap((x: number) => RefRx.Observable.from(letterMap(x), RefRx.Scheduler.async)),
   completeEmits('a', 'b', 'b', 'c', 'c', 'c')
