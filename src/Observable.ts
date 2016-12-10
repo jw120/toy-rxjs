@@ -8,6 +8,7 @@ import { fromPromise } from './observable-static/fromPromise';
 import { staticThrow } from './observable-static/throw';
 import { timer } from './observable-static/timer';
 
+import { combineLatest } from './observable-operators/combineLatest';
 import { concat } from './observable-operators/concat';
 import { concatAll } from './observable-operators/concatAll';
 import { concatMapFull, concatMapSimple } from './observable-operators/concatMap';
@@ -91,6 +92,10 @@ export class Observable<T> {
   //
   // Operators pulled in from observable-operators (where they are defined as functions on SubscribeFns)
   //
+
+  combineLatest<U>(o: Observable<U>): Observable<[T, U]> {
+    return combineLatest(this._subscribe, o._subscribe);
+  }
 
   concat(o: Observable<T>): Observable<T> {
     return concat(this._subscribe, o._subscribe);
