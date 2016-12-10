@@ -22,6 +22,7 @@
       "variable-declaration",
       "member-variable-declaration"
     ],
+    "array-type": [true, "generic"],
 
     /* Turn off some of the recommended/latest rules */
     "member-ordering": [false],
