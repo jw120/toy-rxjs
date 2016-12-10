@@ -1,5 +1,6 @@
 import { Observable , SubscribeFn } from '../Observable';
 import { Observer } from '../Observer';
+import { Subscription } from '../Subscription';
 
 import { subscribe } from './subscribe';
 import { TearDownLogic } from '../utils/TearDownLogic';
@@ -9,66 +10,75 @@ export function concatAll<T>(first: SubscribeFn<Observable<T>>): Observable<T> {
 
   return new Observable((rawFlatObserver: Observer<T>): TearDownLogic => {
 
-    let foundError: boolean = false;
+    interface State {
+      higher: 'Running' // Higher observable is still adding new flat tasks to the queue
+            | 'Waiting' // Higher observable has completed but we are waiting for flat tasks to finish
+            | 'Done';   // Triggered by end of task queue or an error
+      flatRunning: boolean; // set true when we start a flat task (to avoid mixing them)
+    }
+
+    let state: State = {
+      higher: 'Running',
+      flatRunning: false
+    };
+    let flatObservableQueue: Array<Observable<T>> = [];
+    let higherSubscription: Subscription = null;
+
+    const flatObserver: Observer<T> = {
+        next: (x: T) => rawFlatObserver.next(x) ,
+        error: (e: Error) => { state.higher = 'Done'; rawFlatObserver.error(e); }
+      };
+
+    function processQueue(): void {
+      if (!state.flatRunning) {
+        if (flatObservableQueue.length === 0) {
+          if (state.higher === 'Waiting') {
+            state.higher = 'Done';
+            rawFlatObserver.complete();
+            if (higherSubscription) {
+              higherSubscription.unsubscribe();
+              higherSubscription = null;
+            }
+          }
+        } else {
+          state.flatRunning = true;
+          subscribe(flatObservableQueue[0]._subscribe, flatObserver, () => {
+            state.flatRunning = false;
+            flatObservableQueue.shift();
+            processQueue();
+          });
+        }
+      }
+    }
 
     const higherObserver: Observer<Observable<T>> = {
 
       next: (flatObservable: Observable<T>) => {
-        if (!foundError) {
-          console.log('higher next');
-          const flatObserver: Observer<T> = {
-            next: (x: T) => { console.log('flat next', x); rawFlatObserver.next(x); },
-            error: (e: Error) => { console.log('flat error', e.message); foundError = true; rawFlatObserver.error(e); },
-            complete: () => { console.log('flat (complete)'); /* rawFlatObserver.complete(); */ }
-          };
-          flatObservable.subscribe(flatObserver);
+        if (state.higher === 'Running') {
+          flatObservableQueue.push(flatObservable);
+          processQueue();
         }
       },
 
       error: (e: Error) => {
-        if (!foundError) {
-          console.log('higher error');
-          foundError = true;
+        if (state.higher === 'Running') {
+          state.higher = 'Done';
           rawFlatObserver.error(e);
         }
       },
 
       complete: () => {
-        if (!foundError) {
-          console.log('higher complete');
-          rawFlatObserver.complete();
-          // flatObserver.complete();
+        if (state.higher === 'Running') {
+          state.higher = 'Waiting';
+          processQueue();
         }
-
       }
     };
 
-    subscribe(first, higherObserver);
-
-  });
-
-}
-
-/** Convert a higher-order observable to a normal observable by concatenating all output */
-export function flatten<T>(higherObservable: Observable<Observable<T>>): Observable<T> {
-
-  return new Observable((flatObserver: Observer<T>): TearDownLogic => {
-
-    const higherObserver: Observer<Observable<T>> = {
-      next: (flatObservable: Observable<T>) => {
-        console.log('higher next');
-        flatObservable.subscribe((x: T) => {
-          console.log('flat next', x);
-          flatObserver.next(x);
-        });
-      },
-      complete: () => {
-        console.log('higher complete');
-        flatObserver.complete();
-      }
-    };
-
-    subscribe(higherObservable._subscribe, higherObserver);
+    higherSubscription = subscribe(first, higherObserver);
+    if (state.higher === 'Done' && higherSubscription) {
+      higherSubscription.unsubscribe();
+    }
 
   });
 

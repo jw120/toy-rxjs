@@ -21,12 +21,11 @@ Other limitations (see tests labelled 'LIMITATION')
 * fromPromise does not support unsubscribing before resolution
 * cannot double call (multicast) observables like range made with fromIterator
 * Improper types for higher-order operators (concat)
+* Don't support hot observables
 
 ## TODO
 
-* concatAll: async
-* then concatMap
-* Add a hot observable
+* concatMap
 
 * why does fromPromise do nothing for the simple sync cases?
 * support thisArg in map and filter?
