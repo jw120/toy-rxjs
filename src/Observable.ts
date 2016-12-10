@@ -93,8 +93,10 @@ export class Observable<T> {
   // Operators pulled in from observable-operators (where they are defined as functions on SubscribeFns)
   //
 
-  combineLatest<U>(o: Observable<U>): Observable<[T, U]> {
-    return combineLatest(this._subscribe, o._subscribe);
+  combineLatest<U>(o: Observable<U>): Observable<[T, U]>;
+  combineLatest<U, V>(o: Observable<U>, project: (t: T, u: U) => V): Observable<V>;
+  combineLatest<U, V>(o: Observable<U>, project?: (t: T, u: U) => V): Observable<any> {
+    return combineLatest(this._subscribe, o._subscribe, project);
   }
 
   concat(o: Observable<T>): Observable<T> {

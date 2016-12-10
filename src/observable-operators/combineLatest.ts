@@ -4,9 +4,12 @@ import { Observer } from '../Observer';
 import { Subscription } from '../Subscription';
 import { TearDownLogic } from '../utils/TearDownLogic';
 
-export function combineLatest<T, U>(first: SubscribeFn<T>, second: SubscribeFn<U>): Observable<[T, U]> {
+export function combineLatest<T, U, V>(
+  first: SubscribeFn<T>,
+  second: SubscribeFn<U>,
+  project?: (x: T, y: U) => V ): Observable<[T, U] | V> {
 
-  return new Observable<[T, U]>((o: Observer<[T, U]>): TearDownLogic => {
+  return new Observable<[T, U]>((o: Observer<[T, U] | V>): TearDownLogic => {
 
     let latest: [T, U] = [undefined, undefined];
     let started: [boolean, boolean] = [false, false];
@@ -15,7 +18,7 @@ export function combineLatest<T, U>(first: SubscribeFn<T>, second: SubscribeFn<U
     // If both observables have started, emit the pair
     function emit(): void {
       if (started[0] && started[1]) {
-        o.next(latest);
+        o.next(project ? project(latest[0], latest[1]) : latest);
       }
     }
 
@@ -27,15 +30,15 @@ export function combineLatest<T, U>(first: SubscribeFn<T>, second: SubscribeFn<U
     }
 
     const firstObserver: Observer<T> = {
-      next: (x: T) => { started[0] = true; latest[0] = x; console.log('1st', x, latest); emit(); },
+      next: (x: T) => { started[0] = true; latest[0] = x; emit(); },
       error: (e: Error) => o.error(e),
-      complete: () => { console.log('1st complete', latest); completed[0] = true; complete(); }
+      complete: () => { completed[0] = true; complete(); }
     };
 
     const secondObserver: Observer<U> = {
-      next: (x: U) => { started[1] = true; latest[1] = x; console.log('2nd', x, latest); emit(); },
+      next: (x: U) => { started[1] = true; latest[1] = x; emit(); },
       error: (e: Error) => o.error(e),
-      complete: () => { console.log('2nd complete', latest); completed[1] = true; complete(); }
+      complete: () => { completed[1] = true; complete(); }
     };
 
     const firstSub: Subscription = subscribe(first, firstObserver);

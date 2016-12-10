@@ -25,7 +25,6 @@ Other limitations (see tests labelled 'LIMITATION')
 
 ## TODO
 
-* combineLatest - add version with function
 * reduce
 * scan
 * switchMap
@@ -35,7 +34,7 @@ Other limitations (see tests labelled 'LIMITATION')
 - let DONE
 - take DONE
 - switchMap
-- combineLatest
+- combineLatest DONE
 
 * why does fromPromise do nothing for the simple sync cases?
 * support thisArg in map and filter?
