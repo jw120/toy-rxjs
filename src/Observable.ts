@@ -12,9 +12,11 @@ import { combineLatest } from './observable-operators/combineLatest';
 import { concat } from './observable-operators/concat';
 import { concatAll } from './observable-operators/concatAll';
 import { concatMapFull, concatMapSimple } from './observable-operators/concatMap';
+import { count } from './observable-operators/count';
 import { filter } from './observable-operators/filter';
 import { map } from './observable-operators/map';
 import { reduce, reduce1 } from './observable-operators/reduce';
+import { scan, scan1 } from './observable-operators/scan';
 import { subscribe } from './observable-operators/subscribe';
 import { take } from './observable-operators/take';
 
@@ -119,6 +121,10 @@ export class Observable<T> {
     }
   }
 
+  count(predicate?: (value: T, index: number, source: Observable<T>) => boolean): Observable<number> {
+    return count(this, predicate);
+  }
+
   filter(predicate: (x: T) => boolean): Observable<T> {
     return filter(this._subscribe, predicate);
   }
@@ -134,6 +140,16 @@ export class Observable<T> {
       return reduce(this._subscribe, accumulator, seed);
     } else {
       return reduce1<T>(this._subscribe, accumulator);
+    }
+  }
+
+  scan(accumulator: (acc: T, x: T) => T): Observable<T>;
+  scan<R>(accumulator: (acc: R, x: T) => R, seed: R): Observable<R>;
+  scan<R>(accumulator: any, seed?: any): Observable<any> {
+    if (arguments.length > 1) {
+      return scan(this._subscribe, accumulator, seed);
+    } else {
+      return scan1<T>(this._subscribe, accumulator);
     }
   }
 

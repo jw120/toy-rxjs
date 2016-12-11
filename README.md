@@ -27,16 +27,15 @@ Other limitations (see tests labelled 'LIMITATION')
 
 ## TODO
 
-* scan
-* switchMap (via switch)
-* count?
+Trickyish
+* does concatAll handle unsubscribes?
+* mergeAll
+* mergeMap
+* switch
+* switchMap
+* exhaust
+* exhaustMap
 
-* Check what my angular code is using
-- map DONE
-- let DONE
-- take DONE
-- switchMap
-- combineLatest DONE
 
 * why does fromPromise do nothing for the simple sync cases?
 * support thisArg in map and filter?
