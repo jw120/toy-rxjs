@@ -23,11 +23,13 @@ Other limitations (see tests labelled 'LIMITATION')
 * Improper types for higher-order operators (concat)
 * Don't support hot observables
 
+* Problems with typing overloded operators
+
 ## TODO
 
-* reduce
 * scan
-* switchMap
+* switchMap (via switch)
+* count?
 
 * Check what my angular code is using
 - map DONE

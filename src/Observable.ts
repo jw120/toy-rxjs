@@ -14,6 +14,7 @@ import { concatAll } from './observable-operators/concatAll';
 import { concatMapFull, concatMapSimple } from './observable-operators/concatMap';
 import { filter } from './observable-operators/filter';
 import { map } from './observable-operators/map';
+import { reduce, reduce1 } from './observable-operators/reduce';
 import { subscribe } from './observable-operators/subscribe';
 import { take } from './observable-operators/take';
 
@@ -124,6 +125,16 @@ export class Observable<T> {
 
   map<U>(project: (x: T, i: number) => U): Observable<U> {
     return map(this._subscribe, project);
+  }
+
+  reduce(accumulator: (acc: T, x: T) => T): Observable<T>;
+  reduce<R>(accumulator: (acc: R, x: T) => R, seed: R): Observable<R>;
+  reduce<R>(accumulator: any, seed?: any): Observable<any> {
+    if (arguments.length > 1) {
+      return reduce(this._subscribe, accumulator, seed);
+    } else {
+      return reduce1<T>(this._subscribe, accumulator);
+    }
   }
 
   take(n: number): Observable<T> {
