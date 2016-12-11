@@ -27,14 +27,11 @@ Other limitations (see tests labelled 'LIMITATION')
 
 ## TODO
 
-Trickyish
-* does concatAll handle unsubscribes?
-* mergeAll
-* mergeMap
-* switch
-* switchMap
-* exhaust
-* exhaustMap
+* Work out more timed tests for c-e-m-s
+* Tests for mergeAll; implement
+* Tests for switch; implement
+* Tests for exhaust; implement
+* Map versions
 
 
 * why does fromPromise do nothing for the simple sync cases?
