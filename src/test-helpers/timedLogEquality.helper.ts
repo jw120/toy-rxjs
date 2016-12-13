@@ -22,9 +22,17 @@ export function timedLogEquality<T>(first: TimedLog<T>, second: TimedLog<T>): bo
     return undefined;
   }
 
-  return first._log.length === second._log.length &&
-    first._log.every((firstEntry: TimedLogEntry, i: number): boolean => {
-      const secondEntry: TimedLogEntry = second._log[i];
+  if (first._log.length !== second._log.length) {
+    return false;
+  }
+
+  // Async logs might legitimately be in a different order, we sort by the value before comparing
+  function compareValue(a: TimedLogEntry, b: TimedLogEntry): number { return a.value.localeCompare(b.value); }
+  const firstLogSorted: Array<TimedLogEntry> = first._log.concat().sort(compareValue);
+  const secondLogSorted: Array<TimedLogEntry> = second._log.concat().sort(compareValue);
+
+  return firstLogSorted.every((firstEntry: TimedLogEntry, i: number): boolean => {
+      const secondEntry: TimedLogEntry = secondLogSorted[i];
       return firstEntry.time > secondEntry.time + specTolerance[0] &&
         firstEntry.time < secondEntry.time + specTolerance[1] &&
         firstEntry.value === secondEntry.value;

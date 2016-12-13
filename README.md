@@ -27,10 +27,11 @@ Other limitations (see tests labelled 'LIMITATION')
 
 ## TODO
 
-* Tests for mergeAll; implement
+* Compare mergeAll, concatAll; Should we call teardowns?
 * Tests for switch; implement
 * Tests for exhaust; implement
 * Map versions
+* Docs for all functions
 
 * why does fromPromise do nothing for the simple sync cases?
 * support thisArg in map and filter?

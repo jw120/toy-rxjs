@@ -15,6 +15,7 @@ import { concatMapFull, concatMapSimple } from './observable-operators/concatMap
 import { count } from './observable-operators/count';
 import { filter } from './observable-operators/filter';
 import { map } from './observable-operators/map';
+import { mergeAll } from './observable-operators/mergeAll';
 import { reduce, reduce1 } from './observable-operators/reduce';
 import { scan, scan1 } from './observable-operators/scan';
 import { subscribe } from './observable-operators/subscribe';
@@ -131,6 +132,11 @@ export class Observable<T> {
 
   map<U>(project: (x: T, i: number) => U): Observable<U> {
     return map(this._subscribe, project);
+  }
+
+  // LIMITATION: Cannot seem to express this type: should take Observable<Observable<T>> to an Observable<T>
+  mergeAll<U>(): Observable<U> {
+    return mergeAll(this._subscribe as any);
   }
 
   reduce(accumulator: (acc: T, x: T) => T): Observable<T>;

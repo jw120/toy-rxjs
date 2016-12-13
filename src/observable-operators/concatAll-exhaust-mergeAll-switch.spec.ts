@@ -37,7 +37,7 @@ const ref1B: RefRx.Observable<string> = RefRx.Observable.interval(100)
   .map((x: number): string => 'B' + x).take(4);
 
 describeObsTimedAsync('mergeAll operator (timed test 1)',  'should work',
-  () => mkToy1().concatAll(),
+  () => mkToy1().mergeAll(),
   () => RefRx.Observable.of(ref1A, ref1B).mergeAll(),
   [70, 100, 140, 200, 210, 300, 400, 400],
   completeEmits('A0', 'B0', 'A1', 'B1', 'A2', 'B2', 'B3')
@@ -116,7 +116,7 @@ function mkRef2(): RefRx.Observable<RefRx.Observable<string>> {
 }
 
 describeObsTimedAsync('mergeAll operator (timed test 2)',  'should work',
-  () => mkToy2().concatAll(),
+  () => mkToy2().mergeAll(),
   () => mkRef2().mergeAll(),
   [70, 140, 200, 300, 320, 390, 400, 460, 460],
   completeEmits('A0', 'A1', 'B0', 'B1', 'C0', 'C1', 'B2', 'C2')

@@ -1,85 +1,78 @@
-// import { Observable , SubscribeFn } from '../Observable';
-// import { Observer } from '../Observer';
-// import { Subscription } from '../Subscription';
+import { Observable , SubscribeFn } from '../Observable';
+import { Observer } from '../Observer';
+import { Subscription } from '../Subscription';
 
-// import { subscribe } from './subscribe';
-// import { TearDownLogic } from '../utils/TearDownLogic';
+import { subscribe } from './subscribe';
+import { TearDownLogic } from '../utils/TearDownLogic';
 
-// /** Converts a higher-order observable of observables into an observable */
-// export function concatAll<T>(first: SubscribeFn<Observable<T>>): Observable<T> {
+export function mergeAll<T>(first: SubscribeFn<Observable<T>>): Observable<T> {
 
-//   return new Observable((rawFlatObserver: Observer<T>): TearDownLogic => {
+  return new Observable((rawFlatObserver: Observer<T>): TearDownLogic => {
 
-//     interface State {
-//       higher: 'Running' // Higher observable is still adding new flat tasks to the queue
-//             | 'Waiting' // Higher observable has completed but we are waiting for flat tasks to finish
-//             | 'Done';   // Triggered by end of task queue or an error
-//       flatRunning: boolean; // set true when we start a flat task (to avoid mixing them)
-//     }
+    interface State {
+      higher: 'Running' // Higher observable is still adding new flat tasks
+            | 'Waiting' // Higher observable has completed but we are waiting for flat tasks to finish
+            | 'Done';   // Triggered by end of task queue or an error
+      flatIndex: number; // We give each flatObservable a number when we subscribe to it
+      runningList: Array<number>; // And keep a list of active flatObservables - we complete when no more
+    }
+    let state: State = {
+      higher: 'Running',
+      flatIndex: 0,
+      runningList: []
+    };
+    let higherSubscription: Subscription = null;
 
-//     let state: State = {
-//       higher: 'Running',
-//       flatRunning: false
-//     };
-//     let flatObservableQueue: Array<Observable<T>> = [];
-//     let higherSubscription: Subscription = null;
+    function popRunningList(i: number): void {
+      state.runningList = state.runningList.filter((x: number): boolean => x !== i);
+      if (state.runningList.length === 0 && state.higher === 'Waiting') {
+        rawFlatObserver.complete();
+        state.higher = 'Done';
+      }
+    }
 
-//     const flatObserver: Observer<T> = {
-//         next: (x: T) => rawFlatObserver.next(x) ,
-//         error: (e: Error) => { state.higher = 'Done'; rawFlatObserver.error(e); }
-//       };
+    function startFlatObservable(o: Observable<T>, i: number): void {
+      const flatObserver: Observer<T> = {
+        next: (x: T) => rawFlatObserver.next(x) ,
+        error: (e: Error) => { state.higher = 'Done'; rawFlatObserver.error(e); },
+        complete: () => { popRunningList(i); }
+      };
+      state.runningList.push(i);
+      subscribe(o._subscribe, flatObserver);
+    }
 
-//     function processQueue(): void {
-//       if (!state.flatRunning) {
-//         if (flatObservableQueue.length === 0) {
-//           if (state.higher === 'Waiting') {
-//             state.higher = 'Done';
-//             rawFlatObserver.complete();
-//             if (higherSubscription) {
-//               higherSubscription.unsubscribe();
-//               higherSubscription = null;
-//             }
-//           }
-//         } else {
-//           state.flatRunning = true;
-//           subscribe(flatObservableQueue[0]._subscribe, flatObserver, () => {
-//             state.flatRunning = false;
-//             flatObservableQueue.shift();
-//             processQueue();
-//           });
-//         }
-//       }
-//     }
+    const higherObserver: Observer<Observable<T>> = {
 
-//     const higherObserver: Observer<Observable<T>> = {
+      next: (flatObservable: Observable<T>) => {
+        if (state.higher === 'Running') {
+          startFlatObservable(flatObservable, state.flatIndex++);
+        }
+      },
 
-//       next: (flatObservable: Observable<T>) => {
-//         if (state.higher === 'Running') {
-//           flatObservableQueue.push(flatObservable);
-//           processQueue();
-//         }
-//       },
+      error: (e: Error) => {
+        if (state.higher === 'Running') {
+          state.higher = 'Done';
+          rawFlatObserver.error(e);
+        }
+      },
 
-//       error: (e: Error) => {
-//         if (state.higher === 'Running') {
-//           state.higher = 'Done';
-//           rawFlatObserver.error(e);
-//         }
-//       },
+      complete: () => {
+        if (state.higher === 'Running') {
+          if (state.runningList.length > 0) {
+            state.higher = 'Waiting';
+          } else {
+            state.higher = 'Done';
+            rawFlatObserver.complete();
+          }
+        }
+      }
+    };
 
-//       complete: () => {
-//         if (state.higher === 'Running') {
-//           state.higher = 'Waiting';
-//           processQueue();
-//         }
-//       }
-//     };
+    higherSubscription = subscribe(first, higherObserver);
+    if (state.higher === 'Done' && higherSubscription) {
+      higherSubscription.unsubscribe();
+    }
 
-//     higherSubscription = subscribe(first, higherObserver);
-//     if (state.higher === 'Done' && higherSubscription) {
-//       higherSubscription.unsubscribe();
-//     }
+  });
 
-//   });
-
-// }
+}
