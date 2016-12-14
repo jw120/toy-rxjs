@@ -29,7 +29,7 @@ function mkToy1(): ToyRx.Observable<ToyRx.Observable<string>> {
     .map((x: number): string => 'A' + x).take(3);
   const toyB: ToyRx.Observable<string> = ToyRx.Observable.interval(100)
     .map((x: number): string => 'B' + x).take(4);
-  return ToyRx.Observable.of(toyA, toyB);
+  return ToyRx.Observable.of(toyA, toyB, ToyRx.Scheduler.async);
 }
 const ref1A: RefRx.Observable<string> = RefRx.Observable.interval(70)
   .map((x: number): string => 'A' + x).take(3);
@@ -44,7 +44,7 @@ describeObsTimedAsync('mergeAll operator (timed test 1)',  'should work',
 );
 
 describeObsTimedAsync('switch operator (timed test 1)',  'should work',
-  () => mkToy1().concatAll(),
+  () => mkToy1().switch(),
   () => RefRx.Observable.of(ref1A, ref1B).switch(),
   [100, 200, 300, 400, 400],
   completeEmits('B0', 'B1', 'B2', 'B3')
@@ -123,7 +123,7 @@ describeObsTimedAsync('mergeAll operator (timed test 2)',  'should work',
 );
 
 describeObsTimedAsync('switch operator (timed test 2)',  'should work',
-  () => mkToy2().concatAll(),
+  () => mkToy2().switch(),
   () => mkRef2().switch(),
   [70, 200, 320, 390, 460, 460],
   completeEmits('A0', 'B0', 'C0', 'C1', 'C2')

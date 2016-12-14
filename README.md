@@ -28,9 +28,7 @@ Other limitations (see tests labelled 'LIMITATION')
 ## TODO
 
 * Think abotut teardowns in concat/exhaust/switch/merge
-* Tests for switch; implement
 * Map versions
-* Docs for all functions
 
 * why does fromPromise do nothing for the simple sync cases?
 * support thisArg in map and filter?

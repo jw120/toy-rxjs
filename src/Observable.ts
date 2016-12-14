@@ -20,6 +20,7 @@ import { mergeAll } from './observable-operators/mergeAll';
 import { reduce, reduce1 } from './observable-operators/reduce';
 import { scan, scan1 } from './observable-operators/scan';
 import { subscribe } from './observable-operators/subscribe';
+import { switchFn } from './observable-operators/switch';
 import { take } from './observable-operators/take';
 
 import { Scheduler } from './Scheduler';
@@ -163,6 +164,11 @@ export class Observable<T> {
     } else {
       return scan1<T>(this._subscribe, accumulator);
     }
+  }
+
+  // LIMITATION: Cannot seem to express this type: should take Observable<Observable<T>> to an Observable<T>
+  switch<U>(): Observable<U> {
+    return switchFn(this._subscribe as any);
   }
 
   take(n: number): Observable<T> {
