@@ -27,9 +27,8 @@ Other limitations (see tests labelled 'LIMITATION')
 
 ## TODO
 
-* Compare mergeAll, concatAll; Should we call teardowns?
+* Think abotut teardowns in concat/exhaust/switch/merge
 * Tests for switch; implement
-* Tests for exhaust; implement
 * Map versions
 * Docs for all functions
 

@@ -13,6 +13,7 @@ import { concat } from './observable-operators/concat';
 import { concatAll } from './observable-operators/concatAll';
 import { concatMapFull, concatMapSimple } from './observable-operators/concatMap';
 import { count } from './observable-operators/count';
+import { exhaust } from './observable-operators/exhaust';
 import { filter } from './observable-operators/filter';
 import { map } from './observable-operators/map';
 import { mergeAll } from './observable-operators/mergeAll';
@@ -124,6 +125,11 @@ export class Observable<T> {
 
   count(predicate?: (value: T, index: number, source: Observable<T>) => boolean): Observable<number> {
     return count(this, predicate);
+  }
+
+  // LIMITATION: Cannot seem to express this type: should take Observable<Observable<T>> to an Observable<T>
+  exhaust<U>(): Observable<U> {
+    return exhaust(this._subscribe as any);
   }
 
   filter(predicate: (x: T) => boolean): Observable<T> {

@@ -51,7 +51,7 @@ describeObsTimedAsync('switch operator (timed test 1)',  'should work',
 );
 
 describeObsTimedAsync('exhaust operator (timed test 1)',  'should work',
-  () => mkToy1().concatAll(),
+  () => mkToy1().exhaust(),
   () => RefRx.Observable.of(ref1A, ref1B).exhaust(),
   [70, 140, 210, 210],
   completeEmits('A0', 'A1', 'A2')
@@ -130,7 +130,7 @@ describeObsTimedAsync('switch operator (timed test 2)',  'should work',
 );
 
 describeObsTimedAsync('exhaust operator (timed test 2)',  'should work',
-  () => mkToy2().concatAll(),
+  () => mkToy2().exhaust(),
   () => mkRef2().exhaust(),
   [70, 140, 320, 390, 460, 460],
   completeEmits('A0', 'A1', 'C0', 'C1', 'C2')

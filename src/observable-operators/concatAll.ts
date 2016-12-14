@@ -5,7 +5,7 @@ import { Subscription } from '../Subscription';
 import { subscribe } from './subscribe';
 import { TearDownLogic } from '../utils/TearDownLogic';
 
-/** Converts a higher-order observable of observables into an observable */
+/** Flatten a higher-order observable of observables by subscribing one at a time */
 export function concatAll<T>(first: SubscribeFn<Observable<T>>): Observable<T> {
 
   return new Observable((rawFlatObserver: Observer<T>): TearDownLogic => {
