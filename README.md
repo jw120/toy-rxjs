@@ -1,10 +1,12 @@
 # Toy RxJs library
 
 Starting to use Angular 2, I began to make heavy use of Observables from
-the RxJs library (v5). In order to better understand the `magic' within the library,
-I started to write my own toy version to explore the API.
+the RxJs library (v5). In order to better understand the library,
+I took a detour and wrote my own toy RxJs library in TypeScript to explore the API, focusing
+on the operators used in my Angular app.
 
-This now implements most of the RxJS API, with the major Simplification
+This now implements a substantial part of the RxJS API, with many minor ommisions
+and the major Simplification
 that there is no real scheduler. All observables run as JavaScript functions
 (as if passed to Observer.create). A value of `Scheduler.async` can be used
 to make creation methods (like `Obserable.of`) produce an asynchronous
@@ -17,70 +19,31 @@ For all of our tests we compare the result from our toy implementation with
 the expected result and with the result from running with the full Rxjs library.
 
 Other limitations (see tests labelled 'LIMITATION')
-* Unsubscribes in concat called in wrong order
-* fromPromise does not support unsubscribing before resolution
-* cannot double call (multicast) observables like range made with fromIterator
-* Improper types for higher-order operators (concat)
-* Don't support hot observables
 
-* Problems with typing overloded operators
+* Patchy handling of teardowns and unsubscribes (e.g., in `concat` called in wrong order, in `fromPromise` cannot unsubscribe before resolution)
+* Cannot double call (multicast) observables (like`range`) made with `fromIterator`
+* All operators implemented as TypeScript/ES6 class methods (not the hack used by RxJs). This means accepted simplified types
+for higher-order operators (as far as I can tell TypeScript does not give a way to write the proper type for, e.g., `concatAll` as a method)
+* No support for hot observables
 
 ## TODO
 
-* Think abotut teardowns in concat/exhaust/switch/merge
-* Map versions
-
-* why does fromPromise do nothing for the simple sync cases?
-* support thisArg in map and filter?
-
-Tests
-
-* Check take handles excess complete/errors
-
+* Map versions - finish imp, tests
 * Add JSDoc? or at least more comments
-* what is the right word to use? emit? message?
-
-* switchMap
-* combineLatest?
 
 
-## Operators
+## API supported
 
-### Creation
+* `Observer`
+* `Scheduler` (with the major limitations listed below)
+* `Subcription`
+* `Observable` with the following methods:
 
-Written and tests freshened
-* never (scheduler n/a) - done
+  + Fundamental: create, subscribe
+  + Combining: concat, combineLatest
+  + Factory: create, empty, from, fromPromise, interval, never, of, range, throw,timer
+  + Flattening: concatAll, exhaust, mergeAll, switch
+  + Functional: filter, map, reduce,scan, take
+  + Map-and-flatten: concatMap, exhaustMap, mergeMap, switchMap
+  + Utility: count, let
 
-* create - done (scheduler n/a)
-* empty - done (sync and async)
-* throw - done (sync only)
-* of - done (sync and async)
-* interval - done (sync and async- async is default)
-* range - done (sync and async)
-* timer - done (async only)
-* fromPromise - done
-* from - done (only some types support Scheduler)
-
-
-* bindCallback - to do, easy
-* bindNodeCallback - to do, easy
-* defer - to do, medium
-* fromEvent - to do, medium
-* fromEventPattern - to do, medium
-
-* repeat - needs Scheduler
-* repeatWhen - needs Scheduler
-
-* buffer - interesting
-* concatMap
-* scan
-* switchMap
-* pairwise
-* partition
-* delay
-* debounceTime
-* first
-
-Later
-* Scheduler
-* Subject

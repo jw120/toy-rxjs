@@ -11,7 +11,8 @@ import { timer } from './observable-static/timer';
 import { combineLatest } from './observable-operators/combineLatest';
 import { concat } from './observable-operators/concat';
 import { concatAll } from './observable-operators/concatAll';
-import { concatMapFull, concatMapSimple } from './observable-operators/concatMap';
+import { concatMapFull, exhaustMapFull, mergeMapFull, switchMapFull } from './observable-operators/flattenMap';
+import { concatMapSimple, exhaustMapSimple, mergeMapSimple, switchMapSimple } from './observable-operators/flattenMap';
 import { count } from './observable-operators/count';
 import { exhaust } from './observable-operators/exhaust';
 import { filter } from './observable-operators/filter';
@@ -133,6 +134,16 @@ export class Observable<T> {
     return exhaust(this._subscribe as any);
   }
 
+  exhaustMap<U, V>(
+    project: (x: T, i: number) => Observable<U>,
+    resultSelector?: (x: T, y: U, i: number, j: number) => V): Observable<V> {
+    if (resultSelector === undefined) {
+      return exhaustMapSimple<T, U, V>(this._subscribe, project);
+    } else {
+      return exhaustMapFull<T, U, V>(this._subscribe, project, resultSelector);
+    }
+  }
+
   filter(predicate: (x: T) => boolean): Observable<T> {
     return filter(this._subscribe, predicate);
   }
@@ -144,6 +155,16 @@ export class Observable<T> {
   // LIMITATION: Cannot seem to express this type: should take Observable<Observable<T>> to an Observable<T>
   mergeAll<U>(): Observable<U> {
     return mergeAll(this._subscribe as any);
+  }
+
+  mergeMap<U, V>(
+    project: (x: T, i: number) => Observable<U>,
+    resultSelector?: (x: T, y: U, i: number, j: number) => V): Observable<V> {
+    if (resultSelector === undefined) {
+      return mergeMapSimple<T, U, V>(this._subscribe, project);
+    } else {
+      return mergeMapFull<T, U, V>(this._subscribe, project, resultSelector);
+    }
   }
 
   reduce(accumulator: (acc: T, x: T) => T): Observable<T>;
@@ -169,6 +190,16 @@ export class Observable<T> {
   // LIMITATION: Cannot seem to express this type: should take Observable<Observable<T>> to an Observable<T>
   switch<U>(): Observable<U> {
     return switchFn(this._subscribe as any);
+  }
+
+  switchMap<U, V>(
+    project: (x: T, i: number) => Observable<U>,
+    resultSelector?: (x: T, y: U, i: number, j: number) => V): Observable<V> {
+    if (resultSelector === undefined) {
+      return switchMapSimple<T, U, V>(this._subscribe, project);
+    } else {
+      return switchMapFull<T, U, V>(this._subscribe, project, resultSelector);
+    }
   }
 
   take(n: number): Observable<T> {

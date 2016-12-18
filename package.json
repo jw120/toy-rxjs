@@ -5,7 +5,8 @@
   "scripts": {
     "test": "jasmine src/**/*.spec.js",
     "compile": "tsc",
-    "lint": "tslint src/**/*.ts"
+    "compile-watch": "tsc --watch",
+    "lint": "tslint src/**,/*.ts"
   },
   "author": "",
   "license": "Apache-2.0",
