@@ -9,7 +9,9 @@ function flattenMapSimple<T, U, V>(
   flatten: (o: Observable<Observable<U>>) => Observable<V>
   ): Observable<V> {
 
-  return flatten((new Observable(first)).map(project));
+  return (new Observable(first))
+    .map(project)
+    .let(flatten);
 
 }
 
@@ -33,27 +35,71 @@ export function switchMapSimple<T, U, V>(
   return flattenMapSimple(first, project, (o: Observable<Observable<U>>) => o.switch());
 }
 
-export function concatMapFull<T, U, V>(
+interface Result<X, Y> {
+  outerVal: X;
+  innerVal: Y;
+  outerIndex: number;
+  innerIndex: number;
+}
+
+function flattenMapFull<T, U, V>(
   first: SubscribeFn<T>,
   project: (x: T, i: number) => Observable<U>,
-  resultSelector?: (outerVal: T, innerVal: U, outerIndex: number, innerIndex: number) => V
+  resultSelector: (outVal: T, innerVal: U, outerIndex: number, innerIndex: number) => V,
+  flatten: (o: Observable<Observable<Result<T, U>>>) => Observable<Result<T, U>>
 ): Observable<V> {
 
-  interface Result {
-    outerVal: T;
-    innerVal: U;
-    outerIndex: number;
-    innerIndex: number;
-  }
-
-  function resultMap(outerVal: T, outerIndex: number): Observable<Result> {
+  function resultMap(outerVal: T, outerIndex: number): Observable<Result<T, U>> {
     return project(outerVal, outerIndex).map((innerVal: U, innerIndex: number) =>
       ({ outerVal, innerVal, outerIndex, innerIndex }));
   }
 
   return (new Observable(first))
       .map(resultMap)
-      .concatAll()
-      .map((r: Result) => resultSelector(r.outerVal, r.innerVal, r.outerIndex, r.innerIndex));
+      .let(flatten)
+      .map((r: Result<T, U>) => resultSelector(r.outerVal, r.innerVal, r.outerIndex, r.innerIndex));
+}
 
+export function concatMapFull<T, U, V>(
+  first: SubscribeFn<T>,
+  project: (x: T, i: number) => Observable<U>,
+  resultSelector: (outVal: T, innerVal: U, outerIndex: number, innerIndex: number) => V
+): Observable<V> {
+
+  return flattenMapFull(first, project, resultSelector,
+    (o: Observable<Observable<Result<T, U>>>) => o.concatAll()
+  );
+}
+
+export function exhaustMapFull<T, U, V>(
+  first: SubscribeFn<T>,
+  project: (x: T, i: number) => Observable<U>,
+  resultSelector: (outVal: T, innerVal: U, outerIndex: number, innerIndex: number) => V
+): Observable<V> {
+
+  return flattenMapFull(first, project, resultSelector,
+    (o: Observable<Observable<Result<T, U>>>) => o.exhaust()
+  );
+}
+
+export function mergeMapFull<T, U, V>(
+  first: SubscribeFn<T>,
+  project: (x: T, i: number) => Observable<U>,
+  resultSelector: (outVal: T, innerVal: U, outerIndex: number, innerIndex: number) => V
+): Observable<V> {
+
+  return flattenMapFull(first, project, resultSelector,
+    (o: Observable<Observable<Result<T, U>>>) => o.mergeAll()
+  );
+}
+
+export function switchMapFull<T, U, V>(
+  first: SubscribeFn<T>,
+  project: (x: T, i: number) => Observable<U>,
+  resultSelector: (outVal: T, innerVal: U, outerIndex: number, innerIndex: number) => V
+): Observable<V> {
+
+  return flattenMapFull(first, project, resultSelector,
+    (o: Observable<Observable<Result<T, U>>>) => o.switch()
+  );
 }

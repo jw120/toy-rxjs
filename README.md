@@ -28,7 +28,7 @@ for higher-order operators (as far as I can tell TypeScript does not give a way 
 
 ## TODO
 
-* Map versions - finish imp, tests
+* Map versions - tests, doc
 * Add JSDoc? or at least more comments
 
 
