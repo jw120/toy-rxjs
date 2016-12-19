@@ -28,9 +28,9 @@ for higher-order operators (as far as I can tell TypeScript does not give a way 
 
 ## TODO
 
-* Map versions - tests, doc
+* Fix mergeMap
 * Add JSDoc? or at least more comments
-
+* Clean files
 
 ## API supported
 

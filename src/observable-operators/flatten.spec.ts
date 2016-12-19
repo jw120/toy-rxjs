@@ -1,3 +1,5 @@
+// Tests for flattening operators: oncatAll, exhaust, mergeAll, switch
+
 import * as ToyRx from '../Rx';
 import * as RefRx from 'rxjs/Rx';
 
