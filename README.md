@@ -18,19 +18,19 @@ have the nice marble testing from `RxJs`.
 For all of our tests we compare the result from our toy implementation with
 the expected result and with the result from running with the full Rxjs library.
 
-Other limitations (see tests labelled 'LIMITATION')
+## Other limitations
 
 * Patchy handling of teardowns and unsubscribes (e.g., in `concat` called in wrong order, in `fromPromise` cannot unsubscribe before resolution)
 * Cannot double call (multicast) observables (like`range`) made with `fromIterator`
 * All operators implemented as TypeScript/ES6 class methods (not the hack used by RxJs). This means accepted simplified types
 for higher-order operators (as far as I can tell TypeScript does not give a way to write the proper type for, e.g., `concatAll` as a method)
 * No support for hot observables
+* A number of the asynchronous tests are non-deterministic and have been commented out to improve reproducibility
 
 ## TODO
 
-* Fix mergeMap
-* Add JSDoc? or at least more comments
-* Clean files
+* Review all files and ensure at least some JSdoc for all exported functions and methods
+* Put on Github
 
 ## API supported
 

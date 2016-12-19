@@ -120,21 +120,21 @@ function mkRef2(): RefRx.Observable<RefRx.Observable<string>> {
 describeObsTimedAsync('mergeAll operator (timed test 2)',  'should work',
   () => mkToy2().mergeAll(),
   () => mkRef2().mergeAll(),
-  [70, 140, 200, 300, 320, 390, 400, 460, 460],
+  [70, 140, 200, 300, 320, 390, 400, 460, 500],
   completeEmits('A0', 'A1', 'B0', 'B1', 'C0', 'C1', 'B2', 'C2')
 );
 
 describeObsTimedAsync('switch operator (timed test 2)',  'should work',
   () => mkToy2().switch(),
   () => mkRef2().switch(),
-  [70, 200, 320, 390, 460, 460],
+  [70, 200, 320, 390, 460, 500],
   completeEmits('A0', 'B0', 'C0', 'C1', 'C2')
 );
 
 describeObsTimedAsync('exhaust operator (timed test 2)',  'should work',
   () => mkToy2().exhaust(),
   () => mkRef2().exhaust(),
-  [70, 140, 320, 390, 460, 460],
+  [70, 140, 320, 390, 460, 500],
   completeEmits('A0', 'A1', 'C0', 'C1', 'C2')
 );
 

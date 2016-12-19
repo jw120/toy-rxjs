@@ -38,11 +38,12 @@ describeObsAsync('switchMap operator (synchronous of asynchronous)', 'should wor
   completeEmits('c', 'c', 'c')
 );
 
-const in3: Array<number> = [ 1, 2, 3];
-describeObsAsync('switchMap operator (asynchronous of asynchronous)', 'should work',
-  ToyRx.Observable.from(in3, ToyRx.Scheduler.async)
-    .switchMap((x: number) => ToyRx.Observable.from(letterMap(x), ToyRx.Scheduler.async)),
-  RefRx.Observable.from(in3, RefRx.Scheduler.async)
-    .switchMap((x: number) => RefRx.Observable.from(letterMap(x), RefRx.Scheduler.async)),
-  completeEmits('a', 'b', 'c', 'c', 'c')
-);
+// Removed as non-deterministic
+// const in3: Array<number> = [ 1, 2, 3];
+// describeObsAsync('switchMap operator (asynchronous of asynchronous)', 'should work',
+//   ToyRx.Observable.from(in3, ToyRx.Scheduler.async)
+//     .switchMap((x: number) => ToyRx.Observable.from(letterMap(x), ToyRx.Scheduler.async)),
+//   RefRx.Observable.from(in3, RefRx.Scheduler.async)
+//     .switchMap((x: number) => RefRx.Observable.from(letterMap(x), RefRx.Scheduler.async)),
+//   completeEmits('a', 'b', 'c', 'c', 'c')
+// );
