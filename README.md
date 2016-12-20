@@ -1,12 +1,12 @@
 # Toy RxJs library
 
-Starting to use Angular 2, I began to make heavy use of Observables from
+Starting to use Angular 2, I began use
 the RxJs library (v5). In order to better understand the library,
 I took a detour and wrote my own toy RxJs library in TypeScript to explore the API, focusing
 on the operators used in my Angular app.
 
-This now implements a substantial part of the RxJS API, with many minor ommisions
-and the major Simplification
+This 'toy' now implements a subset of the RxJS API, with many minor ommisions
+and the major simplification
 that there is no real scheduler. All observables run as JavaScript functions
 (as if passed to Observer.create). A value of `Scheduler.async` can be used
 to make creation methods (like `Obserable.of`) produce an asynchronous
@@ -15,7 +15,7 @@ a flag and there is no functional `Scheduler` class (to provide
 a sense of time and to schedule actions). This also means we do not
 have the nice marble testing from `RxJs`.
 
-For all of our tests we compare the result from our toy implementation with
+Our tests we compare the result from our toy implementation with
 the expected result and with the result from running with the full Rxjs library.
 
 ## Other limitations
@@ -26,11 +26,6 @@ the expected result and with the result from running with the full Rxjs library.
 for higher-order operators (as far as I can tell TypeScript does not give a way to write the proper type for, e.g., `concatAll` as a method)
 * No support for hot observables
 * A number of the asynchronous tests are non-deterministic and have been commented out to improve reproducibility
-
-## TODO
-
-* Review all files and ensure at least some JSdoc for all exported functions and methods
-* Put on Github
 
 ## API supported
 
